@@ -6,20 +6,20 @@ Smart Briefing is a two-stage RSS-to-LLM pipeline. This document covers the runt
 
 ```mermaid
 flowchart LR
-    A[RSS feeds] --> B[Window filter<br/>last N days]
-    B --> C[Keyword filter<br/>relevance prefilter]
-    C --> D[Stage 1: Groq<br/>LLM scoring]
-    D --> E{Threshold<br/>passed?}
-    E -->|no| Z[Drop]
-    E -->|yes| F[Stage 2: Anthropic<br/>summarization]
-    F --> G[HTML render<br/>sectioned output]
-    G --> H[SMTP delivery]
+    A["RSS feeds"] --> B["Window filter<br>last N days"]
+    B --> C["Keyword filter<br>relevance prefilter"]
+    C --> D["Stage 1: Groq<br>LLM scoring"]
+    D --> E{"Threshold<br>passed?"}
+    E -->|no| Z["Drop"]
+    E -->|yes| F["Stage 2: Anthropic<br>summarization"]
+    F --> G["HTML render<br>sectioned output"]
+    G --> H["SMTP delivery"]
 
-    C -.->|all kept articles| I[(briefing-articles<br/>OpenSearch)]
+    C -.->|all kept articles| I[("briefing-articles")]
     F -.->|with summaries| I
-    A -.->|run lifecycle| J[(briefing-runs<br/>OpenSearch)]
+    A -.->|run lifecycle| J[("briefing-runs")]
     H -.-> J
-    K[(briefing-config<br/>OpenSearch)] -.->|models, thresholds,<br/>keywords, window| A
+    K[("briefing-config")] -.->|models, thresholds,<br>keywords, window| A
 ```
 
 Five distinct stages:
@@ -37,14 +37,14 @@ Three OpenSearch indices, all with strict-schema mappings:
 ```mermaid
 flowchart TB
     subgraph briefing-config
-        C[_id: 'default'<br/>models, thresholds,<br/>keywords, window]
+        C["_id: 'default'<br>models, thresholds,<br>keywords, window"]
     end
     subgraph briefing-articles
-        A1[_id: sha256(url)<br/>title, content, summary,<br/>relevance, source, models]
-        A2[per-article history]
+        A1["_id: sha256 of URL<br>title, content, summary,<br>relevance, source, models"]
+        A2["per-article history"]
     end
     subgraph briefing-runs
-        R[_id: 'YYYY-MM-DD'<br/>status, counts, timing,<br/>tokens, errors, email]
+        R["_id: YYYY-MM-DD<br>status, counts, timing,<br>tokens, errors, email"]
     end
 
     C -.->|read at start| A1

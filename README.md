@@ -42,16 +42,16 @@ See [`config/examples/ai-security-news/`](config/examples/ai-security-news/) for
 
 ```mermaid
 flowchart LR
-    A[RSS feeds] --> B[Keyword filter]
-    B --> C[Stage 1: Groq<br/>relevance scoring]
-    C --> D{Threshold<br/>passed?}
-    D -->|no| Z[Drop]
-    D -->|yes| E[Stage 2: Anthropic<br/>summarization]
-    E --> F[HTML render]
-    F --> G[SMTP delivery]
-    C -.->|all articles| H[(briefing-articles)]
+    A["RSS feeds"] --> B["Keyword filter"]
+    B --> C["Stage 1: Groq<br>relevance scoring"]
+    C --> D{"Threshold<br>passed?"}
+    D -->|no| Z["Drop"]
+    D -->|yes| E["Stage 2: Anthropic<br>summarization"]
+    E --> F["HTML render"]
+    F --> G["SMTP delivery"]
+    C -.->|all articles| H[("briefing-articles")]
     E -.-> H
-    A -.->|run telemetry| I[(briefing-runs)]
+    A -.->|run telemetry| I[("briefing-runs")]
     G -.-> I
 ```
 
