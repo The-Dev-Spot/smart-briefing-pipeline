@@ -1,0 +1,41 @@
+{
+  "index_patterns": ["briefing-articles"],
+  "priority": 100,
+  "_meta": {
+    "owner": "smart-briefing",
+    "version": "1.0.0",
+    "purpose": "One document per ingested article; LLM scoring, summarization, and source metadata"
+  },
+  "template": {
+    "settings": {
+      "index": {
+        "number_of_shards": 1,
+        "number_of_replicas": 0,
+        "refresh_interval": "5s"
+      }
+    },
+    "mappings": {
+      "dynamic": "strict",
+      "properties": {
+        "url_hash":         { "type": "keyword" },
+        "title":            { "type": "text", "fields": { "keyword": { "type": "keyword", "ignore_above": 512 } } },
+        "content":          { "type": "text" },
+        "summary":          { "type": "text" },
+        "category":         { "type": "keyword" },
+        "relevance":        { "type": "keyword" },
+        "relevance_score":  { "type": "float" },
+        "source_name":      { "type": "keyword" },
+        "source_url":       { "type": "keyword", "ignore_above": 2048 },
+        "source_type":      { "type": "keyword" },
+        "published_date":   { "type": "date" },
+        "ingested_at":      { "type": "date" },
+        "first_seen_run_id":{ "type": "keyword" },
+        "last_seen_run_id": { "type": "keyword" },
+        "stage1_model":     { "type": "keyword" },
+        "stage2_model":     { "type": "keyword" },
+        "tags":             { "type": "keyword" },
+        "popularity_score": { "type": "float" }
+      }
+    }
+  }
+}

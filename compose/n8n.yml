@@ -1,0 +1,42 @@
+# n8n for Smart Briefing.
+#
+# Bring up (after OpenSearch is healthy):
+#   docker compose -f compose/n8n.yml up -d
+#
+# n8n UI will be at http://localhost:5678
+#
+# First run: create the owner account in the n8n UI, then import the workflow
+# at n8n/workflows/smart-briefing.json. The workflow's HTTP nodes target
+# https://opensearch:9200 which resolves to the OpenSearch container in this
+# docker network — no IP changes needed.
+
+services:
+  n8n:
+    image: n8nio/n8n:2.19.3
+    container_name: n8n
+    environment:
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY}
+      - GENERIC_TIMEZONE=${TZ}
+      - TZ=${TZ}
+      # Env vars consumed by the imported workflow at runtime
+      - OPENSEARCH_URL=${OPENSEARCH_URL}
+      - BRIEFING_FROM_EMAIL=${BRIEFING_FROM_EMAIL}
+      - BRIEFING_TO_EMAIL=${BRIEFING_TO_EMAIL}
+      - BRIEFING_BCC_EMAIL=${BRIEFING_BCC_EMAIL}
+      # Allow n8n expressions to read process env (default in 2.x but explicit)
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+    volumes:
+      - n8n_data:/home/node/.n8n
+    ports:
+      - "5678:5678"
+    networks:
+      - briefing
+    restart: unless-stopped
+
+volumes:
+  n8n_data:
+
+networks:
+  briefing:
+    name: briefing
+    external: true

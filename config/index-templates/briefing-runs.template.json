@@ -1,0 +1,70 @@
+{
+  "index_patterns": ["briefing-runs"],
+  "priority": 100,
+  "_meta": {
+    "owner": "smart-briefing",
+    "version": "1.0.0",
+    "purpose": "One document per briefing run; lifecycle, email state, telemetry"
+  },
+  "template": {
+    "settings": {
+      "index": {
+        "number_of_shards": 1,
+        "number_of_replicas": 0,
+        "refresh_interval": "5s"
+      }
+    },
+    "mappings": {
+      "dynamic": "strict",
+      "properties": {
+        "run_id":         { "type": "keyword" },
+        "run_date":       { "type": "date", "format": "yyyy-MM-dd" },
+        "status":         { "type": "keyword" },
+        "started_at":     { "type": "date" },
+        "completed_at":   { "type": "date" },
+        "email_sent":     { "type": "boolean" },
+        "email_sent_at":  { "type": "date" },
+        "subject":        { "type": "keyword", "ignore_above": 512 },
+        "html":           { "type": "text", "index": false },
+        "stage1_model":   { "type": "keyword" },
+        "stage2_model":   { "type": "keyword" },
+        "counts": {
+          "properties": {
+            "ingested":     { "type": "integer" },
+            "kept_keyword": { "type": "integer" },
+            "kept_stage1":  { "type": "integer" },
+            "summarized":   { "type": "integer" },
+            "high":         { "type": "integer" },
+            "medium":       { "type": "integer" },
+            "low":          { "type": "integer" }
+          }
+        },
+        "latency_ms": {
+          "properties": {
+            "fetch":  { "type": "integer" },
+            "stage1": { "type": "integer" },
+            "stage2": { "type": "integer" },
+            "total":  { "type": "integer" }
+          }
+        },
+        "tokens": {
+          "properties": {
+            "stage1_in":  { "type": "integer" },
+            "stage1_out": { "type": "integer" },
+            "stage2_in":  { "type": "integer" },
+            "stage2_out": { "type": "integer" }
+          }
+        },
+        "errors": {
+          "type": "nested",
+          "properties": {
+            "stage":   { "type": "keyword" },
+            "source":  { "type": "keyword" },
+            "message": { "type": "text" },
+            "at":      { "type": "date" }
+          }
+        }
+      }
+    }
+  }
+}

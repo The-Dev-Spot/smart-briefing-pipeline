@@ -1,0 +1,48 @@
+{
+  "index_patterns": ["briefing-config"],
+  "priority": 100,
+  "_meta": {
+    "owner": "smart-briefing",
+    "version": "1.0.0",
+    "purpose": "Runtime configuration for the pipeline; one document at _id='default'"
+  },
+  "template": {
+    "settings": {
+      "index": {
+        "number_of_shards": 1,
+        "number_of_replicas": 0,
+        "refresh_interval": "5s"
+      }
+    },
+    "mappings": {
+      "dynamic": "strict",
+      "properties": {
+        "models": {
+          "properties": {
+            "stage1": {
+              "properties": {
+                "provider":    { "type": "keyword" },
+                "model":       { "type": "keyword" },
+                "temperature": { "type": "float" }
+              }
+            },
+            "stage2": {
+              "properties": {
+                "provider":    { "type": "keyword" },
+                "model":       { "type": "keyword" },
+                "temperature": { "type": "float" }
+              }
+            }
+          }
+        },
+        "window_days":         { "type": "integer" },
+        "relevance_threshold": { "type": "keyword" },
+        "keywords": {
+          "properties": {
+            "ai": { "type": "keyword" }
+          }
+        }
+      }
+    }
+  }
+}

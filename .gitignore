@@ -1,0 +1,32 @@
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# n8n runtime (if running locally)
+n8n_data/
+.n8n/
+
+# OpenSearch runtime
+opensearch_data/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python bytecode (if scripts use Python)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local override files
+docker-compose.override.yml
+*.local.yml
+
+# Logs
+*.log
+logs/

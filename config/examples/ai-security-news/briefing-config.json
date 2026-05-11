@@ -1,0 +1,57 @@
+{
+  "models": {
+    "stage1": {
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b",
+      "temperature": 0
+    },
+    "stage2": {
+      "provider": "anthropic",
+      "model": "claude-haiku-4-5",
+      "temperature": 0.2
+    }
+  },
+  "window_days": 2,
+  "relevance_threshold": "medium",
+  "keywords": {
+    "ai": [
+      "AI",
+      "LLM",
+      "GPT",
+      "Claude",
+      "Gemini",
+      "machine learning",
+      "neural network",
+      "transformer",
+      "fine-tuning",
+      "RAG",
+      "embedding",
+      "agent",
+      "MCP",
+      "Anthropic",
+      "OpenAI",
+      "Mistral",
+      "Ollama",
+      "Hugging Face",
+      "prompt injection",
+      "jailbreak",
+      "CVE",
+      "vulnerability",
+      "exploit",
+      "RCE",
+      "zero-day",
+      "ransomware",
+      "breach",
+      "Kubernetes",
+      "container security",
+      "DevSecOps",
+      "supply chain",
+      "Vault",
+      "secrets",
+      "OAuth",
+      "AI security",
+      "model security",
+      "data poisoning"
+    ]
+  }
+}

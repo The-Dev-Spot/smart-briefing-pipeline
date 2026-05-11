@@ -1,0 +1,1554 @@
+{
+  "name": "Smart Briefing",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1100,
+        -100
+      ],
+      "id": "3c78b355-02b2-693f-efdf-c51cba3a53a5",
+      "name": "Manual Trigger"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 6 * * 1-6"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1100,
+        40
+      ],
+      "id": "79985559-4adc-0f2b-d730-2c69d3234b5a",
+      "name": "Schedule Trigger (06:00 Mon-Sat)"
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.OPENSEARCH_URL }}/briefing-config/_doc/default",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -880,
+        -30
+      ],
+      "id": "305c19a0-3077-f754-1b0e-fdf1a24bee88",
+      "name": "Get Config",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "REWIRE_OS",
+          "name": "OpenSearch admin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "run_id",
+              "value": "={{ $now.toFormat('yyyy-MM-dd') }}",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "run_date",
+              "value": "={{ $now.toFormat('yyyy-MM-dd') }}",
+              "type": "string"
+            },
+            {
+              "id": "3",
+              "name": "started_at",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "4",
+              "name": "stage1_provider",
+              "value": "={{ $json._source.models.stage1.provider }}",
+              "type": "string"
+            },
+            {
+              "id": "5",
+              "name": "stage1_model",
+              "value": "={{ $json._source.models.stage1.model }}",
+              "type": "string"
+            },
+            {
+              "id": "6",
+              "name": "stage1_temp",
+              "value": "={{ $json._source.models.stage1.temperature }}",
+              "type": "number"
+            },
+            {
+              "id": "7",
+              "name": "stage2_provider",
+              "value": "={{ $json._source.models.stage2.provider }}",
+              "type": "string"
+            },
+            {
+              "id": "8",
+              "name": "stage2_model",
+              "value": "={{ $json._source.models.stage2.model }}",
+              "type": "string"
+            },
+            {
+              "id": "9",
+              "name": "stage2_temp",
+              "value": "={{ $json._source.models.stage2.temperature }}",
+              "type": "number"
+            },
+            {
+              "id": "10",
+              "name": "window_days",
+              "value": "={{ $json._source.window_days }}",
+              "type": "number"
+            },
+            {
+              "id": "11",
+              "name": "threshold",
+              "value": "={{ $json._source.relevance_threshold }}",
+              "type": "string"
+            },
+            {
+              "id": "12",
+              "name": "keywords",
+              "value": "={{ $json._source.keywords.ai }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -660,
+        -30
+      ],
+      "id": "36783f2b-d1a4-39cf-827e-0e6b74eba0e5",
+      "name": "Init Run"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build the initial run document.\nconst init = $('Init Run').item.json;\nreturn [{ json: { update_body: {\n    run_id:     init.run_id,\n    run_date:   init.run_date,\n    status:     'started',\n    started_at: init.started_at,\n    email_sent: false\n}}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -440,
+        -30
+      ],
+      "id": "0ac86ada-ac2f-c090-255c-03916e1d6fff",
+      "name": "Build Start Run Body"
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $env.OPENSEARCH_URL }}/briefing-runs/_doc/{{ $('Init Run').item.json.run_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.update_body) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -220,
+        -30
+      ],
+      "id": "f5ee78ec-2528-3381-3d9d-3d69ae656ca6",
+      "name": "Start Run Doc",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "REWIRE_OS",
+          "name": "OpenSearch admin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://www.reddit.com/r/Artificial/.rss",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -460
+      ],
+      "id": "9abaceb9-d948-7980-2d19-96a8a4cad9b0",
+      "name": "Reddit r/Artificial"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "source_name",
+              "value": "Reddit r/Artificial",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "source_type",
+              "value": "reddit",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        -460
+      ],
+      "id": "a39a0230-c2ad-698d-2bd1-3939bb9d62e0",
+      "name": "Tag: Reddit r/Artificial"
+    },
+    {
+      "parameters": {
+        "url": "https://www.reddit.com/r/MachineLearning/.rss",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -370
+      ],
+      "id": "e4d5c2ff-7135-f741-a87f-be9f2d9b066d",
+      "name": "Reddit r/MachineLearning"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "source_name",
+              "value": "Reddit r/MachineLearning",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "source_type",
+              "value": "reddit",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        -370
+      ],
+      "id": "8b4e9455-dfd3-b112-a055-967deff47ea2",
+      "name": "Tag: Reddit r/MachineLearning"
+    },
+    {
+      "parameters": {
+        "url": "https://www.reddit.com/r/LocalLLaMA/.rss",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -280
+      ],
+      "id": "a35257c0-c525-72c3-32cb-d6a760efa8b0",
+      "name": "Reddit r/LocalLLaMA"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "source_name",
+              "value": "Reddit r/LocalLLaMA",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "source_type",
+              "value": "reddit",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        -280
+      ],
+      "id": "6ec63cfe-3dab-f509-658a-34e6ec7cdb51",
+      "name": "Tag: Reddit r/LocalLLaMA"
+    },
+    {
+      "parameters": {
+        "url": "https://simonwillison.net/atom/everything/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -190
+      ],
+      "id": "9bfc29f2-909d-d3be-08f2-89a4a14450e9",
+      "name": "Simon Willison"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "source_name",
+              "value": "Simon Willison",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "source_type",
+              "value": "rss",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        -190
+      ],
+      "id": "21eec403-19d2-7a9f-a71d-a5a175a2a45d",
+      "name": "Tag: Simon Willison"
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.feedburner.com/TheHackersNews",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -100
+      ],
+      "id": "6688bf9a-841f-cb7c-ae15-a82f72956f88",
+      "name": "The Hacker News"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "source_name",
+              "value": "The Hacker News",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "source_type",
+              "value": "rss",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        -100
+      ],
+      "id": "5f3916d8-87bb-4c95-c60a-6f8daf7001c4",
+      "name": "Tag: The Hacker News"
+    },
+    {
+      "parameters": {
+        "url": "https://www.bleepingcomputer.com/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -10
+      ],
+      "id": "10ba3190-4aa8-01a0-1517-bea709badcc7",
+      "name": "BleepingComputer"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "source_name",
+              "value": "BleepingComputer",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "source_type",
+              "value": "rss",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        -10
+      ],
+      "id": "855d76c6-39ad-1a1d-ae2d-efdcb51cc87a",
+      "name": "Tag: BleepingComputer"
+    },
+    {
+      "parameters": {
+        "url": "https://krebsonsecurity.com/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        80
+      ],
+      "id": "e4a6e722-1f66-6936-fd9e-950583a619a5",
+      "name": "Krebs on Security"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "source_name",
+              "value": "Krebs on Security",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "source_type",
+              "value": "rss",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        80
+      ],
+      "id": "fa573f55-e505-67cd-131e-58900a75510a",
+      "name": "Tag: Krebs on Security"
+    },
+    {
+      "parameters": {
+        "url": "https://www.darkreading.com/rss.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        170
+      ],
+      "id": "1800a0b7-25a5-92b5-a6c7-6de778bf306c",
+      "name": "Dark Reading"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "source_name",
+              "value": "Dark Reading",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "source_type",
+              "value": "rss",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        170
+      ],
+      "id": "c2d53aa0-55bd-7bcc-0b3c-7513024bfc09",
+      "name": "Tag: Dark Reading"
+    },
+    {
+      "parameters": {
+        "url": "https://darkwebinformer.com/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        260
+      ],
+      "id": "8b915ec9-913c-29b6-101e-9b5baa8560f5",
+      "name": "Dark Web Informer"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "source_name",
+              "value": "Dark Web Informer",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "source_type",
+              "value": "rss",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        260
+      ],
+      "id": "95198fe9-a179-6a3c-7fea-d993de22e2e7",
+      "name": "Tag: Dark Web Informer"
+    },
+    {
+      "parameters": {
+        "url": "https://blog.intelx.io/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        350
+      ],
+      "id": "c621ac5d-5d03-6cdb-2ea1-c4134af88848",
+      "name": "Intelligence X"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1",
+              "name": "source_name",
+              "value": "Intelligence X",
+              "type": "string"
+            },
+            {
+              "id": "2",
+              "name": "source_type",
+              "value": "rss",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        350
+      ],
+      "id": "3dd80217-ca54-8e7f-933c-c4985098ea6f",
+      "name": "Tag: Intelligence X"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Standardize fields across all feed sources.\nreturn $input.all().map(item => {\n    const j = item.json;\n    const raw = (j.contentSnippet || j.content || j.summary || j.description || '').toString();\n    const cleaned = raw\n        .replace(/<[^>]*>/g, ' ')\n        .replace(/&[a-zA-Z]+;/g, ' ')\n        .replace(/&#\\d+;/g, ' ')\n        .replace(/\\s+/g, ' ')\n        .trim()\n        .substring(0, 1000);\n\n    let pub = j.isoDate || j.pubDate || j.date || null;\n    if (pub) {\n        const d = new Date(pub);\n        pub = isNaN(d.getTime()) ? null : d.toISOString();\n    }\n\n    return {\n        json: {\n            title: (j.title || '').toString().trim(),\n            content: cleaned,\n            source_url: (j.link || j.url || '').toString(),\n            source_name: j.source_name || 'Unknown',\n            source_type: j.source_type || 'rss',\n            published_date: pub,\n            tags: Array.isArray(j.categories) ? j.categories : []\n        }\n    };\n}).filter(item => item.json.title && item.json.source_url);\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        -30
+      ],
+      "id": "730bfa37-8b90-5ab8-06a3-e0a03a170835",
+      "name": "Normalize"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Drop articles older than window_days. Drop unparseable/missing dates with a logged error.\nconst windowDays = $('Init Run').item.json.window_days;\nconst cutoff = Date.now() - windowDays * 86400000;\n\nconst errors = [];\nconst kept = [];\n\nfor (const item of $input.all()) {\n    const pd = item.json.published_date;\n    if (!pd) {\n        errors.push({ stage: 'window', source: item.json.source_name, message: 'missing published_date', at: new Date().toISOString() });\n        continue;\n    }\n    const ts = Date.parse(pd);\n    if (isNaN(ts)) {\n        errors.push({ stage: 'window', source: item.json.source_name, message: 'unparseable date: ' + pd, at: new Date().toISOString() });\n        continue;\n    }\n    if (ts < cutoff) continue;\n    kept.push(item);\n}\n\nif (kept.length > 0) {\n    kept[0].json._window_errors = errors;\n    kept[0].json._ingested_count = $input.all().length;\n}\nreturn kept;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        -30
+      ],
+      "id": "f51cb8be-0f2e-3cef-2d20-52828e0738d4",
+      "name": "Filter By Window"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Keep articles matching at least one configured AI keyword. Tag with category 'AI'.\nconst keywords = $('Init Run').item.json.keywords || [];\n\nconst matchAny = (text, kws) => kws.some(kw => {\n    const escaped = kw.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&');\n    const re = new RegExp('\\\\b' + escaped + '\\\\b', 'i');\n    return re.test(text);\n});\n\nreturn $input.all()\n    .filter(item => {\n        const haystack = ((item.json.title || '') + ' ' + (item.json.content || '')).toLowerCase();\n        return matchAny(haystack, keywords);\n    })\n    .map(item => ({ json: { ...item.json, category: 'AI' } }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        -30
+      ],
+      "id": "7635ffdf-dfc3-3e55-7fd6-41b8a914ed1a",
+      "name": "Keyword Filter"
+    },
+    {
+      "parameters": {
+        "jsCode": "const crypto = require('crypto');\nreturn $input.all().map(item => {\n    const url = (item.json.source_url || '').trim().toLowerCase().replace(/\\/$/, '');\n    const url_hash = crypto.createHash('sha256').update(url).digest('hex');\n    return { json: { ...item.json, url_hash } };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1100,
+        -30
+      ],
+      "id": "ad13e3e8-5208-7802-88a2-389c791b5c03",
+      "name": "Compute Hashes"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build _mget body and carry forward originals.\nconst items = $input.all();\nreturn [{\n    json: {\n        mget_body: { ids: items.map(i => i.json.url_hash) },\n        originals: items.map(i => i.json)\n    }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        -30
+      ],
+      "id": "5c175a24-5aa3-dd62-8913-0ff2b42ffea5",
+      "name": "Build mget Body"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OPENSEARCH_URL }}/briefing-articles/_mget",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.mget_body) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1540,
+        -30
+      ],
+      "id": "6e3d8d4d-9132-0c31-6d33-0da3a89b1b2d",
+      "name": "OpenSearch _mget",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "REWIRE_OS",
+          "name": "OpenSearch admin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Match _mget response, emit only items NOT already indexed.\nconst resp = $input.first().json;\nconst originals = $('Build mget Body').item.json.originals;\nconst found = new Set((resp.docs || []).filter(d => d.found).map(d => d._id));\nreturn originals.filter(o => !found.has(o.url_hash)).map(o => ({ json: o }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        -30
+      ],
+      "id": "b8f7481e-b153-608d-b44f-908ad396281c",
+      "name": "Filter Existing"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Batch into 10s, build OpenAI-compatible chat-completion request bodies.\nconst items = $input.all();\nconst stage1_model = $('Init Run').item.json.stage1_model;\nconst stage1_temp = $('Init Run').item.json.stage1_temp ?? 0;\n\nconst SYS = [\n    'You are an AI/security/devops research analyst. You will receive a JSON array of articles.',\n    'For each article, output a JSON object with these fields exactly:',\n    '- source_url (verbatim from input - used to match results back)',\n    '- relevance: one of \"high\" | \"medium\" | \"low\"',\n    '- relevance_score: number between 0.0 and 1.0',\n    '- reasoning: a short phrase, max 12 words',\n    '',\n    'Output ONLY a JSON array, one object per input article, in the same order. No markdown, no preamble, no trailing prose.',\n    '',\n    'Priority guide:',\n    '- HIGH: novel security vulnerabilities/exploits, breaking platform changes, major model releases, devops tools worth adopting',\n    '- MEDIUM: significant tool/library updates, useful new techniques, commentary by trusted authorities',\n    '- LOW: general discussion, opinion, low-impact news'\n].join('\\n');\n\nconst chunks = [];\nfor (let i = 0; i < items.length; i += 10) {\n    chunks.push(items.slice(i, i + 10));\n}\n\nreturn chunks.map(chunk => {\n    const articles = chunk.map(c => ({\n        title: c.json.title,\n        content: (c.json.content || '').substring(0, 500),\n        source_url: c.json.source_url,\n        published_date: c.json.published_date\n    }));\n    return {\n        json: {\n            requestBody: {\n                model: stage1_model,\n                temperature: stage1_temp,\n                max_tokens: 2000,\n                messages: [\n                    { role: 'system', content: SYS },\n                    { role: 'user',   content: JSON.stringify(articles) }\n                ]\n            },\n            originals: chunk.map(c => c.json)\n        }\n    };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        -30
+      ],
+      "id": "e18e5eb3-f92c-4cf0-4357-4f2b307bc576",
+      "name": "Build Stage 1 Batches"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.requestBody) }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 1000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2200,
+        -30
+      ],
+      "id": "d1d7fb86-43f7-f70a-ea53-596457537f2c",
+      "name": "Stage 1 LLM (Groq)",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REWIRE_GROQ",
+          "name": "Groq API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const RANK = { low: 1, medium: 2, high: 3 };\nconst threshold = $('Init Run').item.json.threshold || 'medium';\nconst stage1_model = $('Init Run').item.json.stage1_model;\nconst minRank = RANK[threshold] || 2;\n\nconst out = [];\nconst errors = [];\n\nconst responses = $input.all();\nconst builds = $('Build Stage 1 Batches').all();\n\nfor (let bi = 0; bi < responses.length; bi++) {\n    const item = responses[bi];\n    const content = item.json?.choices?.[0]?.message?.content || '';\n    const originals = builds[bi]?.json?.originals || [];\n\n    let scored;\n    const start = content.indexOf('[');\n    const end = content.lastIndexOf(']');\n    if (start === -1 || end === -1) {\n        errors.push({ stage: 'stage1', source: 'parse', message: 'no JSON array in response', at: new Date().toISOString() });\n        continue;\n    }\n    try {\n        scored = JSON.parse(content.substring(start, end + 1));\n    } catch (e) {\n        errors.push({ stage: 'stage1', source: 'parse', message: e.message, at: new Date().toISOString() });\n        continue;\n    }\n\n    const byUrl = new Map(scored.map(s => [s.source_url, s]));\n    for (const orig of originals) {\n        const score = byUrl.get(orig.source_url);\n        if (!score) {\n            errors.push({ stage: 'stage1', source: 'match', message: 'no score for ' + orig.source_url, at: new Date().toISOString() });\n            continue;\n        }\n        if ((RANK[score.relevance] || 0) < minRank) continue;\n        out.push({ json: { ...orig, relevance: score.relevance, relevance_score: score.relevance_score ?? null, stage1_model } });\n    }\n}\n\nif (out.length > 0 && errors.length > 0) {\n    out[0].json._stage1_errors = errors;\n}\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        -30
+      ],
+      "id": "bec2eebc-2700-bc9c-17bb-be2b27d1124e",
+      "name": "Parse Stage 1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// One Anthropic Messages request per surviving article.\nconst items = $input.all();\nconst stage2_model = $('Init Run').item.json.stage2_model;\nconst stage2_temp = $('Init Run').item.json.stage2_temp ?? 0.2;\n\nconst SYS = 'You are a technical writer. Summarize the article below in 2 to 3 sentences (max 80 words) for a DevOps lead with a security focus. Lead with what happened. Note why it matters technically. End with any concrete action a reader might take. No preamble, no \"this article discusses\".';\n\nreturn items.map(item => ({\n    json: {\n        requestBody: {\n            model: stage2_model,\n            temperature: stage2_temp,\n            max_tokens: 200,\n            system: SYS,\n            messages: [\n                { role: 'user', content: 'Title: ' + item.json.title + '\\n\\nURL: ' + item.json.source_url + '\\n\\nContent:\\n' + (item.json.content || '') }\n            ]\n        },\n        original: item.json\n    }\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        -30
+      ],
+      "id": "039fd928-6c4f-1f0d-a4f5-9b4ed90dbfef",
+      "name": "Build Stage 2 Batches"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "anthropicApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.requestBody) }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 500
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2860,
+        -30
+      ],
+      "id": "301c7e27-3da4-a7ae-1b74-8e9dd4a011f2",
+      "name": "Stage 2 LLM (Anthropic)",
+      "credentials": {
+        "anthropicApi": {
+          "id": "REWIRE_ANTHROPIC",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pair each Anthropic response with its original article (positional).\nconst stage2_model = $('Init Run').item.json.stage2_model;\nconst items = $input.all();\nconst builds = $('Build Stage 2 Batches').all();\n\nreturn items.map((item, i) => {\n    const content = item.json?.content?.[0]?.text || '';\n    const orig = builds[i]?.json?.original || {};\n    return { json: { ...orig, summary: content.trim(), stage2_model } };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        -30
+      ],
+      "id": "42124075-b8c9-483b-e5a1-d3503b6fe2f8",
+      "name": "Parse Stage 2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().map(i => i.json);\nconst today = $('Init Run').item.json.run_date;\n\nconst RANK = { high: 3, medium: 2, low: 1 };\nitems.sort((a, b) => {\n    const r = (RANK[b.relevance] || 0) - (RANK[a.relevance] || 0);\n    if (r !== 0) return r;\n    return new Date(b.published_date).getTime() - new Date(a.published_date).getTime();\n});\n\nconst counts = {\n    high:   items.filter(i => i.relevance === 'high').length,\n    medium: items.filter(i => i.relevance === 'medium').length,\n    low:    items.filter(i => i.relevance === 'low').length\n};\n\nconst sectionOf = (rel, label, color) => {\n    const its = items.filter(i => i.relevance === rel);\n    if (!its.length) return '';\n    const cards = its.map(a => {\n        const dt = new Date(a.published_date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });\n        return '<tr><td style=\"padding:10px 0;border-bottom:1px solid #e2e8f0;\">'\n             + '<a href=\"' + a.source_url + '\" style=\"color:' + color + ';font-weight:bold;text-decoration:none;font-size:15px;\">' + a.title + '</a>'\n             + '<p style=\"color:#4a5568;font-size:13px;line-height:1.5;margin:6px 0;\">' + (a.summary || '') + '</p>'\n             + '<span style=\"color:#a0aec0;font-size:11px;\">' + a.source_name + ' &middot; ' + dt + '</span>'\n             + '</td></tr>';\n    }).join('\\n');\n    return '<tr><td style=\"padding:24px 0 12px 0;border-bottom:2px solid ' + color + ';\">'\n         + '<h2 style=\"color:#2d3748;font-size:18px;margin:0;\">' + label + '</h2>'\n         + '</td></tr>' + cards;\n};\n\nconst body = sectionOf('high',   'HIGH',   '#0ea5e9')\n           + sectionOf('medium', 'MEDIUM', '#f59e0b')\n           + sectionOf('low',    'LOW',    '#10b981');\n\nconst html = '<!doctype html><html><body style=\"font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f7fafc;padding:20px;\">'\n           + '<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width:680px;margin:auto;background:white;padding:24px;border-radius:8px;\">'\n           + body\n           + '</table></body></html>';\n\nconst subject = 'Smart News Briefing - ' + today + ' (' + items.length + ' articles)';\n\nreturn [{ json: { subject, html, articles: items, article_count: items.length, counts } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        -30
+      ],
+      "id": "dddc7ab6-511f-3158-6aca-484003e3508a",
+      "name": "Format HTML"
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.BRIEFING_FROM_EMAIL }}",
+        "toEmail": "={{ $env.BRIEFING_TO_EMAIL }}",
+        "subject": "={{ $json.subject }}",
+        "html": "={{ $json.html }}",
+        "options": {
+          "bccEmail": "={{ $env.BRIEFING_BCC_EMAIL }}"
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        3520,
+        -30
+      ],
+      "id": "39d37ff8-e221-d53d-5194-c6f6671c3bfe",
+      "name": "Send Email",
+      "credentials": {
+        "smtp": {
+          "id": "REWIRE_SMTP",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build OpenSearch _bulk body for upserting briefing-articles.\nconst articles = $('Format HTML').item.json.articles;\nconst run_id = $('Init Run').item.json.run_id;\nconst now = new Date().toISOString();\n\nconst lines = [];\nfor (const a of articles) {\n    lines.push(JSON.stringify({ index: { _index: 'briefing-articles', _id: a.url_hash } }));\n    lines.push(JSON.stringify({\n        url_hash: a.url_hash,\n        title: a.title,\n        content: a.content,\n        summary: a.summary,\n        category: 'AI',\n        relevance: a.relevance,\n        relevance_score: a.relevance_score,\n        source_name: a.source_name,\n        source_url: a.source_url,\n        source_type: a.source_type,\n        published_date: a.published_date,\n        ingested_at: now,\n        first_seen_run_id: run_id,\n        last_seen_run_id: run_id,\n        stage1_model: a.stage1_model,\n        stage2_model: a.stage2_model,\n        tags: a.tags || [],\n        popularity_score: a.popularity_score ?? null\n    }));\n}\n\nreturn [{ json: { bulk_body: lines.join('\\n') + '\\n' } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3520,
+        130
+      ],
+      "id": "b21ae899-aafb-ffa2-1547-7cd9b028e9b9",
+      "name": "Build Articles Bulk Body"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OPENSEARCH_URL }}/_bulk",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-ndjson"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "string",
+        "body": "={{ $json.bulk_body }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3740,
+        130
+      ],
+      "id": "6ced9a71-0e53-ef27-d10c-2f2c402f1925",
+      "name": "Persist Articles",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "REWIRE_OS",
+          "name": "OpenSearch admin"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build the run-completion update doc.\nconst init = $('Init Run').item.json;\nconst fmt = $('Format HTML').item.json;\nconst now = new Date().toISOString();\n\nreturn [{ json: { update_body: {\n    doc: {\n        status: 'completed',\n        completed_at: now,\n        subject: fmt.subject,\n        html: fmt.html,\n        email_sent: true,\n        email_sent_at: now,\n        counts: {\n            summarized: fmt.article_count,\n            high:       fmt.counts.high,\n            medium:     fmt.counts.medium,\n            low:        fmt.counts.low\n        },\n        stage1_model: init.stage1_model,\n        stage2_model: init.stage2_model\n    },\n    doc_as_upsert: true\n}}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3960,
+        130
+      ],
+      "id": "41d6125e-0dc8-4c03-aeb1-42affe285012",
+      "name": "Build Close Run Body"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.OPENSEARCH_URL }}/briefing-runs/_update/{{ $('Init Run').item.json.run_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.update_body) }}",
+        "options": {
+          "allowUnauthorizedCerts": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        4180,
+        130
+      ],
+      "id": "f7ac3145-d453-d29f-3164-da49d41be417",
+      "name": "Close Run Doc",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "REWIRE_OS",
+          "name": "OpenSearch admin"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger (06:00 Mon-Sat)": {
+      "main": [
+        [
+          {
+            "node": "Get Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Config": {
+      "main": [
+        [
+          {
+            "node": "Init Run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Init Run": {
+      "main": [
+        [
+          {
+            "node": "Build Start Run Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Start Run Body": {
+      "main": [
+        [
+          {
+            "node": "Start Run Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start Run Doc": {
+      "main": [
+        [
+          {
+            "node": "Reddit r/Artificial",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Reddit r/MachineLearning",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Reddit r/LocalLLaMA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Simon Willison",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "The Hacker News",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "BleepingComputer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Krebs on Security",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Dark Reading",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Dark Web Informer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Intelligence X",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reddit r/Artificial": {
+      "main": [
+        [
+          {
+            "node": "Tag: Reddit r/Artificial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reddit r/MachineLearning": {
+      "main": [
+        [
+          {
+            "node": "Tag: Reddit r/MachineLearning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reddit r/LocalLLaMA": {
+      "main": [
+        [
+          {
+            "node": "Tag: Reddit r/LocalLLaMA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simon Willison": {
+      "main": [
+        [
+          {
+            "node": "Tag: Simon Willison",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "The Hacker News": {
+      "main": [
+        [
+          {
+            "node": "Tag: The Hacker News",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "BleepingComputer": {
+      "main": [
+        [
+          {
+            "node": "Tag: BleepingComputer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Krebs on Security": {
+      "main": [
+        [
+          {
+            "node": "Tag: Krebs on Security",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dark Reading": {
+      "main": [
+        [
+          {
+            "node": "Tag: Dark Reading",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dark Web Informer": {
+      "main": [
+        [
+          {
+            "node": "Tag: Dark Web Informer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intelligence X": {
+      "main": [
+        [
+          {
+            "node": "Tag: Intelligence X",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag: Reddit r/Artificial": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag: Reddit r/MachineLearning": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag: Reddit r/LocalLLaMA": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag: Simon Willison": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag: The Hacker News": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag: BleepingComputer": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag: Krebs on Security": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag: Dark Reading": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag: Dark Web Informer": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tag: Intelligence X": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize": {
+      "main": [
+        [
+          {
+            "node": "Filter By Window",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter By Window": {
+      "main": [
+        [
+          {
+            "node": "Keyword Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keyword Filter": {
+      "main": [
+        [
+          {
+            "node": "Compute Hashes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compute Hashes": {
+      "main": [
+        [
+          {
+            "node": "Build mget Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build mget Body": {
+      "main": [
+        [
+          {
+            "node": "OpenSearch _mget",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSearch _mget": {
+      "main": [
+        [
+          {
+            "node": "Filter Existing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Existing": {
+      "main": [
+        [
+          {
+            "node": "Build Stage 1 Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Stage 1 Batches": {
+      "main": [
+        [
+          {
+            "node": "Stage 1 LLM (Groq)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stage 1 LLM (Groq)": {
+      "main": [
+        [
+          {
+            "node": "Parse Stage 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Stage 1": {
+      "main": [
+        [
+          {
+            "node": "Build Stage 2 Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Stage 2 Batches": {
+      "main": [
+        [
+          {
+            "node": "Stage 2 LLM (Anthropic)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stage 2 LLM (Anthropic)": {
+      "main": [
+        [
+          {
+            "node": "Parse Stage 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Stage 2": {
+      "main": [
+        [
+          {
+            "node": "Format HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format HTML": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Build Articles Bulk Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Articles Bulk Body": {
+      "main": [
+        [
+          {
+            "node": "Persist Articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Persist Articles": {
+      "main": [
+        [
+          {
+            "node": "Build Close Run Body",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Close Run Body": {
+      "main": [
+        [
+          {
+            "node": "Close Run Doc",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "name": "ai"
+    },
+    {
+      "name": "security"
+    },
+    {
+      "name": "rss"
+    },
+    {
+      "name": "starter"
+    }
+  ]
+}
