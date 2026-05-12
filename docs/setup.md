@@ -1,120 +1,33 @@
-# Setup
+# Setup — configuring n8n
 
-After `docker compose up -d`, this guide walks through everything needed to receive your first briefing email. Run the steps in order — each one has a verification check at the end before you move on.
+After completing the [README quickstart](../README.md#quickstart) (docker compose up, templates applied, config seeded), the n8n side needs configuration that can't be scripted — credentials are entered through the n8n UI.
 
-## 1. Verify the stack came up healthy
-
-Before doing anything else, confirm all three services are running and healthy:
-
-```bash
-docker compose ps
-```
-
-You should see three containers, all `Up` and (for opensearch + postgres) showing `healthy`:
-
-```
-NAME            STATUS                      PORTS
-opensearch      Up X minutes (healthy)      0.0.0.0:9200->9200/tcp
-n8n-postgres    Up X minutes (healthy)
-n8n             Up X minutes                0.0.0.0:5678->5678/tcp
-```
-
-**Important — OpenSearch takes 60–90 seconds to reach `healthy` on first start** while it generates self-signed certs and runs the security plugin's bootstrap. If you see `Up X seconds (health: starting)`, wait. Re-run `docker compose ps` until you see `(healthy)`.
-
-If OpenSearch flips to `Restarting` or never goes healthy, see [Common issues](#common-issues) below — most commonly a weak password being rejected.
-
-### Direct healthcheck
-
-Independent of the docker healthcheck, you can hit OpenSearch directly from your host:
-
-**Linux / macOS:**
-```bash
-source .env
-curl -ks -u "admin:$OPENSEARCH_INITIAL_ADMIN_PASSWORD" \
-    "$OPENSEARCH_URL/_cluster/health" | python3 -m json.tool
-```
-
-**Windows PowerShell:**
-```powershell
-# Load .env into the session
-Get-Content .env | ForEach-Object {
-    if ($_ -match '^([A-Z_][A-Z0-9_]*)=(.*)$') {
-        Set-Item -Path "env:$($matches[1])" -Value $matches[2]
-    }
-}
-
-# curl.exe ships with Windows 10/11 and supports the same flags as Linux curl
-curl.exe -ks -u "admin:$env:OPENSEARCH_INITIAL_ADMIN_PASSWORD" `
-    "$env:OPENSEARCH_URL/_cluster/health" | ConvertFrom-Json | ConvertTo-Json
-```
-
-Expected: a JSON response with `"status": "green"` or `"status": "yellow"`, `"number_of_nodes": 1`. Any non-200 here, or no response at all, means OpenSearch isn't actually ready — don't proceed until this works.
-
-## 2. Apply OpenSearch index templates
-
-This creates the schemas for `briefing-articles`, `briefing-runs`, and `briefing-config`. Idempotent — re-runnable anytime.
-
-**Linux / macOS:**
-```bash
-./scripts/apply-templates.sh
-```
-
-**Windows PowerShell:**
-```powershell
-.\scripts\apply-templates.ps1
-```
-
-Expected output: three `OK` lines (one per template), each returning `{"acknowledged":true}`.
-
-## 3. Seed the default config
-
-POSTs the AI-security-news sample config to `briefing-config/_doc/default`. The workflow reads this at the start of every run.
-
-**Linux / macOS:**
-```bash
-./scripts/seed-config.sh
-```
-
-**Windows PowerShell:**
-```powershell
-.\scripts\seed-config.ps1
-```
-
-Expected output: `OK {"_index":"briefing-config","_id":"default","_version":1,"result":"created",...}`. Re-running flips `result` to `"updated"`.
-
-To use a different config, set `CONFIG_FILE` before running:
-```bash
-CONFIG_FILE=config/examples/my-topic/briefing-config.json ./scripts/seed-config.sh
-```
-
-## 4. Configure n8n
+## 1. Import the workflow
 
 Open the n8n UI at [http://localhost:5678](http://localhost:5678) and create the owner account on first visit. Any password works for a local instance.
 
-### Import the workflow
-
 n8n UI → **Workflows** → **Import from File** → select `n8n/workflows/smart-briefing.json`.
 
-You'll see 45 nodes load with red badges on 8 of them — that's correct, those are the credentials you'll create next.
+50 nodes load with red badges on 7 of them — those are the credentials you'll create next.
 
-### Create credentials
+## 2. Create credentials
 
-Four distinct credential types, eight credential references across the workflow:
+Four distinct credential types, seven credential references across the workflow:
 
 | Credential name | Type | What to fill in |
 |---|---|---|
-| `OpenSearch admin` | HTTP Basic Auth | `admin` / value of `OPENSEARCH_INITIAL_ADMIN_PASSWORD` from `.env` |
-| `Groq API` | HTTP Header Auth | Header: `Authorization`, value: `Bearer <your-groq-key>` |
+| `Opensearch` | HTTP Basic Auth | `admin` / value of `OPENSEARCH_INITIAL_ADMIN_PASSWORD` from `.env` |
+| `Groq` | Groq API | Your Groq API key |
 | `Anthropic account` | Anthropic API | Your Anthropic API key |
 | `SMTP account` | SMTP | Host, port, user, password from your SMTP provider |
 
-The OpenSearch credential is reused by 5 nodes; the other three are 1-each.
+The Opensearch credential is reused by 4 nodes; the other three are 1-each.
 
 n8n UI → **Credentials** → **New** → pick the type → name it **exactly** as shown above → save. Repeat for all four.
 
 Once saved, the red badges on the workflow nodes turn green.
 
-### Activate the workflow
+## 3. Activate the workflow
 
 In the n8n UI: open the imported workflow → toggle **Active** (top-right).
 
@@ -122,9 +35,9 @@ The workflow has a scheduled trigger (06:00 Mon–Sat by default — adjust in t
 
 You should receive a briefing email within ~60 seconds. Stage 1 LLM calls take most of the time.
 
-## 5. Verify end-to-end
+## 4. Verify end-to-end
 
-After a run, check the run doc landed cleanly:
+After a run, check that the run doc landed cleanly.
 
 **Linux / macOS:**
 ```bash
@@ -136,6 +49,11 @@ curl -ks -u "admin:$OPENSEARCH_INITIAL_ADMIN_PASSWORD" \
 
 **Windows PowerShell:**
 ```powershell
+Get-Content .env | ForEach-Object {
+    if ($_ -match '^([A-Z_][A-Z0-9_]*)=(.*)$') {
+        Set-Item -Path "env:$($matches[1])" -Value $matches[2]
+    }
+}
 $today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
 curl.exe -ks -u "admin:$env:OPENSEARCH_INITIAL_ADMIN_PASSWORD" `
     "$env:OPENSEARCH_URL/briefing-runs/_doc/$today" | ConvertFrom-Json | ConvertTo-Json -Depth 10
@@ -149,7 +67,45 @@ Acceptance criteria on the returned document:
 
 If `status: "started"` and `email_sent: false`, check the n8n execution log — the `Persist & Close` node's HTTP response shows what failed (most commonly a credential or SMTP issue).
 
-## Common issues
+---
+
+## Troubleshooting
+
+### Reddit RSS feeds return 403
+
+Reddit rate-limits and restricts RSS access aggressively, especially for traffic from new IPs.
+
+The shipped workflow already mitigates this: all three Reddit feeds (`r/Artificial`, `r/MachineLearning`, `r/LocalLLaMA`) use `HTTP Request` nodes rather than `rssFeedRead`. The default n8n RSS reader uses a User-Agent string Reddit explicitly blocks; the generic HTTP Request UA passes through.
+
+If you still see 403s on Reddit feeds:
+
+1. **Wait 15–30 minutes and retry.** Even with HTTP Request nodes, Reddit can rate-limit aggressively from fresh IPs.
+2. **Other sources still produce a useful briefing.** Krebs, BleepingComputer, Dark Reading, The Hacker News, Simon Willison, Dark Web Informer, and Intelligence X don't go through Reddit. If Reddit is persistently 403ing, disable just those three nodes in the n8n UI — the rest of the pipeline runs unaffected.
+3. **Set an explicit User-Agent header.** Open any Reddit `HTTP Request` node → Options → Add Header → `User-Agent` → e.g., `smart-briefing/1.0 (your-email@example.com)`. Reddit's policy specifically asks for an identifying UA.
+
+### Verify OpenSearch is healthy independent of Docker
+
+If `docker compose ps` shows `(healthy)` but something downstream is still failing, hit OpenSearch directly to rule out the security plugin:
+
+**Linux / macOS:**
+```bash
+source .env
+curl -ks -u "admin:$OPENSEARCH_INITIAL_ADMIN_PASSWORD" \
+    "$OPENSEARCH_URL/_cluster/health" | python3 -m json.tool
+```
+
+**Windows PowerShell:**
+```powershell
+Get-Content .env | ForEach-Object {
+    if ($_ -match '^([A-Z_][A-Z0-9_]*)=(.*)$') {
+        Set-Item -Path "env:$($matches[1])" -Value $matches[2]
+    }
+}
+curl.exe -ks -u "admin:$env:OPENSEARCH_INITIAL_ADMIN_PASSWORD" `
+    "$env:OPENSEARCH_URL/_cluster/health" | ConvertFrom-Json | ConvertTo-Json
+```
+
+Expected: `"status": "green"` (or `"yellow"`), `"number_of_nodes": 1`.
 
 ### OpenSearch never goes healthy
 
@@ -177,7 +133,7 @@ Check `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` is in `docker-compose.yml` for the n8
 
 ### Cert errors when curling OpenSearch
 
-Expected — the security plugin generates self-signed certs on first run. The `-k` flag for curl and `-SkipCertificateCheck` for PowerShell tell each tool to ignore them. The n8n HTTP nodes already have "Ignore SSL Issues" enabled.
+Expected — the security plugin generates self-signed certs on first run. The `-k` flag for curl and `-SkipCertificateCheck` for PowerShell 7+ (or the cert-policy trick used in `apply-templates.ps1` for PS 5.1) tell each tool to ignore them. The n8n HTTP nodes already have "Ignore SSL Issues" enabled.
 
 ### Email never arrives
 

@@ -6,10 +6,10 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -1100,
-        -100
+        1216,
+        1264
       ],
-      "id": "3c78b355-02b2-693f-efdf-c51cba3a53a5",
+      "id": "00ad4aa3-5813-4550-8f65-c7d6fd28dc19",
       "name": "Manual Trigger"
     },
     {
@@ -26,10 +26,10 @@
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.3,
       "position": [
-        -1100,
-        40
+        1216,
+        1456
       ],
-      "id": "79985559-4adc-0f2b-d730-2c69d3234b5a",
+      "id": "d0e46538-da6b-4292-b2ba-cbb4d6d73fda",
       "name": "Schedule Trigger (06:00 Mon-Sat)"
     },
     {
@@ -44,15 +44,15 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -880,
-        -30
+        1440,
+        1360
       ],
-      "id": "305c19a0-3077-f754-1b0e-fdf1a24bee88",
+      "id": "4ae7cc00-9e6b-4594-a132-8530e8300e6a",
       "name": "Get Config",
       "credentials": {
         "httpBasicAuth": {
           "id": "REWIRE_OS",
-          "name": "OpenSearch admin"
+          "name": "Opensearch"
         }
       }
     },
@@ -139,10 +139,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -660,
-        -30
+        1664,
+        1360
       ],
-      "id": "36783f2b-d1a4-39cf-827e-0e6b74eba0e5",
+      "id": "95b0a319-0bf5-4e91-8fa0-2a654e2ea1cf",
       "name": "Init Run"
     },
     {
@@ -152,10 +152,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -440,
-        -30
+        1888,
+        1360
       ],
-      "id": "0ac86ada-ac2f-c090-255c-03916e1d6fff",
+      "id": "625ebe52-ced4-4c20-a1ce-2aef6cba3dce",
       "name": "Build Start Run Body"
     },
     {
@@ -174,31 +174,17 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        -220,
-        -30
+        2112,
+        1360
       ],
-      "id": "f5ee78ec-2528-3381-3d9d-3d69ae656ca6",
+      "id": "b24b8e62-ea99-4343-a9d5-87e8a7864c2f",
       "name": "Start Run Doc",
       "credentials": {
         "httpBasicAuth": {
           "id": "REWIRE_OS",
-          "name": "OpenSearch admin"
+          "name": "Opensearch"
         }
       }
-    },
-    {
-      "parameters": {
-        "url": "https://www.reddit.com/r/Artificial/.rss",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1.2,
-      "position": [
-        0,
-        -460
-      ],
-      "id": "9abaceb9-d948-7980-2d19-96a8a4cad9b0",
-      "name": "Reddit r/Artificial"
     },
     {
       "parameters": {
@@ -224,25 +210,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        -460
+        2560,
+        496
       ],
-      "id": "a39a0230-c2ad-698d-2bd1-3939bb9d62e0",
+      "id": "6546540d-5709-49e4-b181-7248e6d3f4cf",
       "name": "Tag: Reddit r/Artificial"
-    },
-    {
-      "parameters": {
-        "url": "https://www.reddit.com/r/MachineLearning/.rss",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1.2,
-      "position": [
-        0,
-        -370
-      ],
-      "id": "e4d5c2ff-7135-f741-a87f-be9f2d9b066d",
-      "name": "Reddit r/MachineLearning"
     },
     {
       "parameters": {
@@ -268,25 +240,11 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        -370
+        2560,
+        688
       ],
-      "id": "8b4e9455-dfd3-b112-a055-967deff47ea2",
+      "id": "fd833c8d-8f76-41b6-b9a3-658d093315e4",
       "name": "Tag: Reddit r/MachineLearning"
-    },
-    {
-      "parameters": {
-        "url": "https://www.reddit.com/r/LocalLLaMA/.rss",
-        "options": {}
-      },
-      "type": "n8n-nodes-base.rssFeedRead",
-      "typeVersion": 1.2,
-      "position": [
-        0,
-        -280
-      ],
-      "id": "a35257c0-c525-72c3-32cb-d6a760efa8b0",
-      "name": "Reddit r/LocalLLaMA"
     },
     {
       "parameters": {
@@ -312,10 +270,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        -280
+        2560,
+        880
       ],
-      "id": "6ec63cfe-3dab-f509-658a-34e6ec7cdb51",
+      "id": "ff1e7992-1a02-4302-8448-fa4c782f285f",
       "name": "Tag: Reddit r/LocalLLaMA"
     },
     {
@@ -326,10 +284,10 @@
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        0,
-        -190
+        2336,
+        1072
       ],
-      "id": "9bfc29f2-909d-d3be-08f2-89a4a14450e9",
+      "id": "03731430-28ae-49cc-be01-ff8456def687",
       "name": "Simon Willison"
     },
     {
@@ -356,10 +314,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        -190
+        2560,
+        1072
       ],
-      "id": "21eec403-19d2-7a9f-a71d-a5a175a2a45d",
+      "id": "d1f40d6d-017a-4281-a4ba-b2c49e7e306b",
       "name": "Tag: Simon Willison"
     },
     {
@@ -370,10 +328,10 @@
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        0,
-        -100
+        2336,
+        1264
       ],
-      "id": "6688bf9a-841f-cb7c-ae15-a82f72956f88",
+      "id": "a2f05a03-2556-4a07-9bd4-6672aa605ad4",
       "name": "The Hacker News"
     },
     {
@@ -400,10 +358,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        -100
+        2560,
+        1264
       ],
-      "id": "5f3916d8-87bb-4c95-c60a-6f8daf7001c4",
+      "id": "f19524c8-a2aa-41b8-b13c-b163f0c9a1cf",
       "name": "Tag: The Hacker News"
     },
     {
@@ -414,10 +372,10 @@
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        0,
-        -10
+        2336,
+        1456
       ],
-      "id": "10ba3190-4aa8-01a0-1517-bea709badcc7",
+      "id": "cb97ae49-111a-496c-bd17-43275ce354f4",
       "name": "BleepingComputer"
     },
     {
@@ -444,10 +402,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        -10
+        2560,
+        1456
       ],
-      "id": "855d76c6-39ad-1a1d-ae2d-efdcb51cc87a",
+      "id": "2d81fbff-2099-4f45-a758-7a8313be016e",
       "name": "Tag: BleepingComputer"
     },
     {
@@ -458,10 +416,10 @@
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        0,
-        80
+        2336,
+        1648
       ],
-      "id": "e4a6e722-1f66-6936-fd9e-950583a619a5",
+      "id": "ffca3235-ae77-471e-ba01-778d55ab3a0e",
       "name": "Krebs on Security"
     },
     {
@@ -488,10 +446,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        80
+        2560,
+        1648
       ],
-      "id": "fa573f55-e505-67cd-131e-58900a75510a",
+      "id": "7d871c01-622c-4828-a981-34225e45fa8a",
       "name": "Tag: Krebs on Security"
     },
     {
@@ -502,10 +460,10 @@
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        0,
-        170
+        2336,
+        1840
       ],
-      "id": "1800a0b7-25a5-92b5-a6c7-6de778bf306c",
+      "id": "0a3b7718-1af4-48a5-9e47-80ebfd77ca24",
       "name": "Dark Reading"
     },
     {
@@ -532,10 +490,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        170
+        2560,
+        1840
       ],
-      "id": "c2d53aa0-55bd-7bcc-0b3c-7513024bfc09",
+      "id": "4f84ab1d-7faf-4232-a345-6d007b5be382",
       "name": "Tag: Dark Reading"
     },
     {
@@ -546,10 +504,10 @@
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        0,
-        260
+        2336,
+        2032
       ],
-      "id": "8b915ec9-913c-29b6-101e-9b5baa8560f5",
+      "id": "b26f54c0-4ed1-464d-b6f3-fb35f5f3b371",
       "name": "Dark Web Informer"
     },
     {
@@ -576,24 +534,24 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        260
+        2560,
+        2032
       ],
-      "id": "95198fe9-a179-6a3c-7fea-d993de22e2e7",
+      "id": "b838afb7-07f8-4ece-843d-97216a18df0b",
       "name": "Tag: Dark Web Informer"
     },
     {
       "parameters": {
-        "url": "https://blog.intelx.io/feed/",
+        "url": "https://blog.intelligencex.org/rss/latest-posts",
         "options": {}
       },
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1.2,
       "position": [
-        0,
-        350
+        2336,
+        2224
       ],
-      "id": "c621ac5d-5d03-6cdb-2ea1-c4134af88848",
+      "id": "7f51808d-c99a-4941-b05c-a942b6b287ed",
       "name": "Intelligence X"
     },
     {
@@ -620,10 +578,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        220,
-        350
+        2560,
+        2224
       ],
-      "id": "3dd80217-ca54-8e7f-933c-c4985098ea6f",
+      "id": "722b298e-1ec4-4d56-965c-57dbbd0ef5dc",
       "name": "Tag: Intelligence X"
     },
     {
@@ -633,10 +591,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        440,
-        -30
+        3456,
+        1168
       ],
-      "id": "730bfa37-8b90-5ab8-06a3-e0a03a170835",
+      "id": "3ae50319-afd0-4219-91f7-6d532c8c69ab",
       "name": "Normalize"
     },
     {
@@ -646,10 +604,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        660,
-        -30
+        3680,
+        1168
       ],
-      "id": "f51cb8be-0f2e-3cef-2d20-52828e0738d4",
+      "id": "c63e8ecf-339f-4704-9b57-c40487f97992",
       "name": "Filter By Window"
     },
     {
@@ -659,24 +617,11 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        880,
-        -30
+        3904,
+        1168
       ],
-      "id": "7635ffdf-dfc3-3e55-7fd6-41b8a914ed1a",
+      "id": "e25fb2e0-99ff-4352-b86c-067db925f36d",
       "name": "Keyword Filter"
-    },
-    {
-      "parameters": {
-        "jsCode": "const crypto = require('crypto');\nreturn $input.all().map(item => {\n    const url = (item.json.source_url || '').trim().toLowerCase().replace(/\\/$/, '');\n    const url_hash = crypto.createHash('sha256').update(url).digest('hex');\n    return { json: { ...item.json, url_hash } };\n});\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1100,
-        -30
-      ],
-      "id": "ad13e3e8-5208-7802-88a2-389c791b5c03",
-      "name": "Compute Hashes"
     },
     {
       "parameters": {
@@ -685,10 +630,10 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1320,
-        -30
+        4352,
+        1168
       ],
-      "id": "5c175a24-5aa3-dd62-8913-0ff2b42ffea5",
+      "id": "fb592e18-22e3-41c8-9cf3-eec3b80eae1c",
       "name": "Build mget Body"
     },
     {
@@ -707,15 +652,15 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        1540,
-        -30
+        4576,
+        1168
       ],
-      "id": "6e3d8d4d-9132-0c31-6d33-0da3a89b1b2d",
+      "id": "8d90d5f8-75ba-420d-8029-c7d9f89e9e41",
       "name": "OpenSearch _mget",
       "credentials": {
         "httpBasicAuth": {
           "id": "REWIRE_OS",
-          "name": "OpenSearch admin"
+          "name": "Opensearch"
         }
       }
     },
@@ -726,163 +671,23 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1760,
-        -30
+        4800,
+        1168
       ],
-      "id": "b8f7481e-b153-608d-b44f-908ad396281c",
+      "id": "6ff3858c-64bb-4b7c-971a-bc6757d72c17",
       "name": "Filter Existing"
     },
     {
       "parameters": {
-        "jsCode": "// Batch into 10s, build OpenAI-compatible chat-completion request bodies.\nconst items = $input.all();\nconst stage1_model = $('Init Run').item.json.stage1_model;\nconst stage1_temp = $('Init Run').item.json.stage1_temp ?? 0;\n\nconst SYS = [\n    'You are an AI/security/devops research analyst. You will receive a JSON array of articles.',\n    'For each article, output a JSON object with these fields exactly:',\n    '- source_url (verbatim from input - used to match results back)',\n    '- relevance: one of \"high\" | \"medium\" | \"low\"',\n    '- relevance_score: number between 0.0 and 1.0',\n    '- reasoning: a short phrase, max 12 words',\n    '',\n    'Output ONLY a JSON array, one object per input article, in the same order. No markdown, no preamble, no trailing prose.',\n    '',\n    'Priority guide:',\n    '- HIGH: novel security vulnerabilities/exploits, breaking platform changes, major model releases, devops tools worth adopting',\n    '- MEDIUM: significant tool/library updates, useful new techniques, commentary by trusted authorities',\n    '- LOW: general discussion, opinion, low-impact news'\n].join('\\n');\n\nconst chunks = [];\nfor (let i = 0; i < items.length; i += 10) {\n    chunks.push(items.slice(i, i + 10));\n}\n\nreturn chunks.map(chunk => {\n    const articles = chunk.map(c => ({\n        title: c.json.title,\n        content: (c.json.content || '').substring(0, 500),\n        source_url: c.json.source_url,\n        published_date: c.json.published_date\n    }));\n    return {\n        json: {\n            requestBody: {\n                model: stage1_model,\n                temperature: stage1_temp,\n                max_tokens: 2000,\n                messages: [\n                    { role: 'system', content: SYS },\n                    { role: 'user',   content: JSON.stringify(articles) }\n                ]\n            },\n            originals: chunk.map(c => c.json)\n        }\n    };\n});\n"
+        "jsCode": "const items = $input.all().map(i => i.json);\nconst today = $('Init Run').first().json.run_date;\n\nconst RANK = { high: 3, medium: 2, low: 1 };\nitems.sort((a, b) => {\n    const r = (RANK[b.relevance] || 0) - (RANK[a.relevance] || 0);\n    if (r !== 0) return r;\n    return new Date(b.published_date).getTime() - new Date(a.published_date).getTime();\n});\n\nconst counts = {\n    high:   items.filter(i => i.relevance === 'high').length,\n    medium: items.filter(i => i.relevance === 'medium').length,\n    low:    items.filter(i => i.relevance === 'low').length\n};\n\nconst sectionOf = (rel, label, color) => {\n    const its = items.filter(i => i.relevance === rel);\n    if (!its.length) return '';\n    const cards = its.map(a => {\n        const dt = new Date(a.published_date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });\n        return '<tr><td style=\"padding:10px 0;border-bottom:1px solid #e2e8f0;\">'\n             + '<a href=\"' + a.source_url + '\" style=\"color:' + color + ';font-weight:bold;text-decoration:none;font-size:15px;\">' + a.title + '</a>'\n             + '<p style=\"color:#4a5568;font-size:13px;line-height:1.5;margin:6px 0;\">' + (a.summary || '') + '</p>'\n             + '<span style=\"color:#a0aec0;font-size:11px;\">' + a.source_name + ' &middot; ' + dt + '</span>'\n             + '</td></tr>';\n    }).join('\\n');\n    return '<tr><td style=\"padding:24px 0 12px 0;border-bottom:2px solid ' + color + ';\">'\n         + '<h2 style=\"color:#2d3748;font-size:18px;margin:0;\">' + label + '</h2>'\n         + '</td></tr>' + cards;\n};\n\nconst body = sectionOf('high',   'HIGH',   '#0ea5e9')\n           + sectionOf('medium', 'MEDIUM', '#f59e0b')\n           + sectionOf('low',    'LOW',    '#10b981');\n\nconst html = '<!doctype html><html><body style=\"font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f7fafc;padding:20px;\">'\n           + '<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width:680px;margin:auto;background:white;padding:24px;border-radius:8px;\">'\n           + body\n           + '</table></body></html>';\n\nconst subject = 'Smart News Briefing - ' + today + ' (' + items.length + ' articles)';\n\nreturn [{ json: { subject, html, articles: items, article_count: items.length, counts } }];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1980,
-        -30
+        6592,
+        1168
       ],
-      "id": "e18e5eb3-f92c-4cf0-4357-4f2b307bc576",
-      "name": "Build Stage 1 Batches"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.groq.com/openai/v1/chat/completions",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify($json.requestBody) }}",
-        "options": {
-          "batching": {
-            "batch": {
-              "batchSize": 1,
-              "batchInterval": 1000
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        2200,
-        -30
-      ],
-      "id": "d1d7fb86-43f7-f70a-ea53-596457537f2c",
-      "name": "Stage 1 LLM (Groq)",
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "REWIRE_GROQ",
-          "name": "Groq API"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "const RANK = { low: 1, medium: 2, high: 3 };\nconst threshold = $('Init Run').item.json.threshold || 'medium';\nconst stage1_model = $('Init Run').item.json.stage1_model;\nconst minRank = RANK[threshold] || 2;\n\nconst out = [];\nconst errors = [];\n\nconst responses = $input.all();\nconst builds = $('Build Stage 1 Batches').all();\n\nfor (let bi = 0; bi < responses.length; bi++) {\n    const item = responses[bi];\n    const content = item.json?.choices?.[0]?.message?.content || '';\n    const originals = builds[bi]?.json?.originals || [];\n\n    let scored;\n    const start = content.indexOf('[');\n    const end = content.lastIndexOf(']');\n    if (start === -1 || end === -1) {\n        errors.push({ stage: 'stage1', source: 'parse', message: 'no JSON array in response', at: new Date().toISOString() });\n        continue;\n    }\n    try {\n        scored = JSON.parse(content.substring(start, end + 1));\n    } catch (e) {\n        errors.push({ stage: 'stage1', source: 'parse', message: e.message, at: new Date().toISOString() });\n        continue;\n    }\n\n    const byUrl = new Map(scored.map(s => [s.source_url, s]));\n    for (const orig of originals) {\n        const score = byUrl.get(orig.source_url);\n        if (!score) {\n            errors.push({ stage: 'stage1', source: 'match', message: 'no score for ' + orig.source_url, at: new Date().toISOString() });\n            continue;\n        }\n        if ((RANK[score.relevance] || 0) < minRank) continue;\n        out.push({ json: { ...orig, relevance: score.relevance, relevance_score: score.relevance_score ?? null, stage1_model } });\n    }\n}\n\nif (out.length > 0 && errors.length > 0) {\n    out[0].json._stage1_errors = errors;\n}\nreturn out;\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2420,
-        -30
-      ],
-      "id": "bec2eebc-2700-bc9c-17bb-be2b27d1124e",
-      "name": "Parse Stage 1"
-    },
-    {
-      "parameters": {
-        "jsCode": "// One Anthropic Messages request per surviving article.\nconst items = $input.all();\nconst stage2_model = $('Init Run').item.json.stage2_model;\nconst stage2_temp = $('Init Run').item.json.stage2_temp ?? 0.2;\n\nconst SYS = 'You are a technical writer. Summarize the article below in 2 to 3 sentences (max 80 words) for a DevOps lead with a security focus. Lead with what happened. Note why it matters technically. End with any concrete action a reader might take. No preamble, no \"this article discusses\".';\n\nreturn items.map(item => ({\n    json: {\n        requestBody: {\n            model: stage2_model,\n            temperature: stage2_temp,\n            max_tokens: 200,\n            system: SYS,\n            messages: [\n                { role: 'user', content: 'Title: ' + item.json.title + '\\n\\nURL: ' + item.json.source_url + '\\n\\nContent:\\n' + (item.json.content || '') }\n            ]\n        },\n        original: item.json\n    }\n}));\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        2640,
-        -30
-      ],
-      "id": "039fd928-6c4f-1f0d-a4f5-9b4ed90dbfef",
-      "name": "Build Stage 2 Batches"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.anthropic.com/v1/messages",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "anthropicApi",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            },
-            {
-              "name": "anthropic-version",
-              "value": "2023-06-01"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify($json.requestBody) }}",
-        "options": {
-          "batching": {
-            "batch": {
-              "batchSize": 1,
-              "batchInterval": 500
-            }
-          }
-        }
-      },
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
-      "position": [
-        2860,
-        -30
-      ],
-      "id": "301c7e27-3da4-a7ae-1b74-8e9dd4a011f2",
-      "name": "Stage 2 LLM (Anthropic)",
-      "credentials": {
-        "anthropicApi": {
-          "id": "REWIRE_ANTHROPIC",
-          "name": "Anthropic account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "// Pair each Anthropic response with its original article (positional).\nconst stage2_model = $('Init Run').item.json.stage2_model;\nconst items = $input.all();\nconst builds = $('Build Stage 2 Batches').all();\n\nreturn items.map((item, i) => {\n    const content = item.json?.content?.[0]?.text || '';\n    const orig = builds[i]?.json?.original || {};\n    return { json: { ...orig, summary: content.trim(), stage2_model } };\n});\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3080,
-        -30
-      ],
-      "id": "42124075-b8c9-483b-e5a1-d3503b6fe2f8",
-      "name": "Parse Stage 2"
-    },
-    {
-      "parameters": {
-        "jsCode": "const items = $input.all().map(i => i.json);\nconst today = $('Init Run').item.json.run_date;\n\nconst RANK = { high: 3, medium: 2, low: 1 };\nitems.sort((a, b) => {\n    const r = (RANK[b.relevance] || 0) - (RANK[a.relevance] || 0);\n    if (r !== 0) return r;\n    return new Date(b.published_date).getTime() - new Date(a.published_date).getTime();\n});\n\nconst counts = {\n    high:   items.filter(i => i.relevance === 'high').length,\n    medium: items.filter(i => i.relevance === 'medium').length,\n    low:    items.filter(i => i.relevance === 'low').length\n};\n\nconst sectionOf = (rel, label, color) => {\n    const its = items.filter(i => i.relevance === rel);\n    if (!its.length) return '';\n    const cards = its.map(a => {\n        const dt = new Date(a.published_date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });\n        return '<tr><td style=\"padding:10px 0;border-bottom:1px solid #e2e8f0;\">'\n             + '<a href=\"' + a.source_url + '\" style=\"color:' + color + ';font-weight:bold;text-decoration:none;font-size:15px;\">' + a.title + '</a>'\n             + '<p style=\"color:#4a5568;font-size:13px;line-height:1.5;margin:6px 0;\">' + (a.summary || '') + '</p>'\n             + '<span style=\"color:#a0aec0;font-size:11px;\">' + a.source_name + ' &middot; ' + dt + '</span>'\n             + '</td></tr>';\n    }).join('\\n');\n    return '<tr><td style=\"padding:24px 0 12px 0;border-bottom:2px solid ' + color + ';\">'\n         + '<h2 style=\"color:#2d3748;font-size:18px;margin:0;\">' + label + '</h2>'\n         + '</td></tr>' + cards;\n};\n\nconst body = sectionOf('high',   'HIGH',   '#0ea5e9')\n           + sectionOf('medium', 'MEDIUM', '#f59e0b')\n           + sectionOf('low',    'LOW',    '#10b981');\n\nconst html = '<!doctype html><html><body style=\"font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#f7fafc;padding:20px;\">'\n           + '<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width:680px;margin:auto;background:white;padding:24px;border-radius:8px;\">'\n           + body\n           + '</table></body></html>';\n\nconst subject = 'Smart News Briefing - ' + today + ' (' + items.length + ' articles)';\n\nreturn [{ json: { subject, html, articles: items, article_count: items.length, counts } }];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3300,
-        -30
-      ],
-      "id": "dddc7ab6-511f-3158-6aca-484003e3508a",
+      "id": "591f9e0f-cd06-4e91-9bb5-361a13bdb443",
       "name": "Format HTML"
     },
     {
@@ -898,11 +703,12 @@
       "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2.1,
       "position": [
-        3520,
-        -30
+        6816,
+        1168
       ],
-      "id": "39d37ff8-e221-d53d-5194-c6f6671c3bfe",
+      "id": "6e256c87-d3a7-4049-8fac-f29ef674f695",
       "name": "Send Email",
+      "webhookId": "f2a2b769-9cfc-4d33-8277-8775c4208034",
       "credentials": {
         "smtp": {
           "id": "REWIRE_SMTP",
@@ -912,16 +718,168 @@
     },
     {
       "parameters": {
-        "jsCode": "// Build OpenSearch _bulk body for upserting briefing-articles.\nconst articles = $('Format HTML').item.json.articles;\nconst run_id = $('Init Run').item.json.run_id;\nconst now = new Date().toISOString();\n\nconst lines = [];\nfor (const a of articles) {\n    lines.push(JSON.stringify({ index: { _index: 'briefing-articles', _id: a.url_hash } }));\n    lines.push(JSON.stringify({\n        url_hash: a.url_hash,\n        title: a.title,\n        content: a.content,\n        summary: a.summary,\n        category: 'AI',\n        relevance: a.relevance,\n        relevance_score: a.relevance_score,\n        source_name: a.source_name,\n        source_url: a.source_url,\n        source_type: a.source_type,\n        published_date: a.published_date,\n        ingested_at: now,\n        first_seen_run_id: run_id,\n        last_seen_run_id: run_id,\n        stage1_model: a.stage1_model,\n        stage2_model: a.stage2_model,\n        tags: a.tags || [],\n        popularity_score: a.popularity_score ?? null\n    }));\n}\n\nreturn [{ json: { bulk_body: lines.join('\\n') + '\\n' } }];\n"
+        "jsCode": "// Group articles into batches of 10 for the Stage 1 agent.\n// Output: one item per batch, with a `prompt` (JSON string of articles)\n// and an `originals` array (preserved across the agent for matching).\nconst items = $input.all();\nconst BATCH = 10;\nconst out = [];\nfor (let i = 0; i < items.length; i += BATCH) {\n    const chunk = items.slice(i, i + BATCH);\n    const articles = chunk.map(c => ({\n        title: c.json.title,\n        content: (c.json.content || '').substring(0, 500),\n        source_url: c.json.source_url,\n        published_date: c.json.published_date\n    }));\n    out.push({\n        json: {\n            prompt: JSON.stringify(articles),\n            originals: chunk.map(c => c.json),\n            batch_index: out.length\n        }\n    });\n}\nreturn out;\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3520,
-        130
+        5024,
+        1168
       ],
-      "id": "b21ae899-aafb-ffa2-1547-7cd9b028e9b9",
-      "name": "Build Articles Bulk Body"
+      "id": "fd278104-c435-46e1-bac3-b484ead0c88e",
+      "name": "Stage 1 Build Batch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.prompt }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are an AI/security/devops research analyst. You will receive a JSON array of articles.\nFor each article, classify its relevance to a DevOps team lead with security focus.\n\nPriority guide:\n- HIGH: novel security vulnerabilities/exploits, breaking platform changes, major model releases, devops tools worth adopting\n- MEDIUM: significant tool/library updates, useful new techniques, commentary by trusted authorities\n- LOW: general discussion, opinion, low-impact news\n\nReturn one entry per input article, in the same order. The `source_url` MUST be copied verbatim from the input \u2014 it is the join key."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        5248,
+        1168
+      ],
+      "id": "f1d86c76-07c1-41ec-b13a-85d1ea0e0c58",
+      "name": "Stage 1 Agent"
+    },
+    {
+      "parameters": {
+        "model": "=openai/gpt-oss-120b",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        5248,
+        1600
+      ],
+      "id": "9dff0dfa-4fd5-4870-9dcf-f57755a25d42",
+      "name": "Stage 1 Groq Model",
+      "credentials": {
+        "groqApi": {
+          "id": "REWIRE_GROQ",
+          "name": "Groq"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"scores\": [\n    {\n      \"source_url\": \"https://example.com/article\",\n      \"relevance\": \"high\",\n      \"relevance_score\": 0.9,\n      \"reasoning\": \"novel CVE in widely-used library\"\n    }\n  ]\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        5312,
+        1392
+      ],
+      "id": "7c3726c1-4cbe-47b5-ab91-ec049ecb57f9",
+      "name": "Stage 1 Output Parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Flatten Stage 1 agent batches back to per-article items.\n// Apply the relevance threshold from briefing-config.\nconst RANK = { low: 1, medium: 2, high: 3 };\nconst threshold = $('Init Run').first().json.threshold || 'medium';\nconst stage1_model = $('Init Run').first().json.stage1_model;\nconst minRank = RANK[threshold] || 2;\n\nconst out = [];\nconst errors = [];\n\nconst batches = $input.all();                              // Stage 1 Agent outputs\nconst builds = $('Stage 1 Build Batch').all();             // Originals live here, not on agent output\n\nfor (let bi = 0; bi < batches.length; bi++) {\n    const item = batches[bi];\n    const parsed = item.json?.output || item.json;\n    const scores = Array.isArray(parsed) ? parsed : (parsed?.scores || []);\n    const originals = builds[bi]?.json?.originals || [];   // Get originals from Build Batch by index\n\n    if (!Array.isArray(scores) || scores.length === 0) {\n        errors.push({ stage: 'stage1', source: 'parse', message: 'no scores in batch ' + bi, at: new Date().toISOString() });\n        continue;\n    }\n\n    const byUrl = new Map(scores.map(s => [s.source_url, s]));\n    for (const orig of originals) {\n        const score = byUrl.get(orig.source_url);\n        if (!score) {\n            errors.push({ stage: 'stage1', source: 'match', message: 'no score for ' + orig.source_url, at: new Date().toISOString() });\n            continue;\n        }\n        const relevance = (score.relevance || '').toLowerCase();\n        if ((RANK[relevance] || 0) < minRank) continue;\n        out.push({ json: {\n            ...orig,\n            relevance,\n            relevance_score: score.relevance_score ?? null,\n            stage1_model\n        }});\n    }\n}\n\nif (out.length > 0 && errors.length > 0) {\n    out[0].json._stage1_errors = errors;\n}\nreturn out;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5696,
+        1168
+      ],
+      "id": "040e78cc-4b97-44e3-ad5c-c84b665b8d9b",
+      "name": "Stage 1 Flatten + Threshold"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Title: {{ $json.title }}\n\nURL: {{ $json.source_url }}\n\nContent:\n{{ $json.content }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a technical writer. Summarize the article in 2 to 3 sentences (max 80 words) for a DevOps lead with a security focus. Lead with what happened. Note why it matters technically. End with any concrete action a reader might take. No preamble, no \"this article discusses\".\n\nCRITICAL: Always produce a summary, even if the content appears truncated, short, or sparse. Never ask for more content. Never refuse. If the article is too short to have technical depth, summarize what is there in one sentence. If only a title is available, summarize from the title alone. The \"summary\" field MUST be populated on every call.\n\nReturn ONLY the summary text in the `summary` field."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.1,
+      "position": [
+        5920,
+        1168
+      ],
+      "id": "1fe6e054-51e7-490b-bff6-20e9cf8a3e15",
+      "name": "Stage 2 Agent",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "=claude-haiku-4-5",
+          "mode": "id"
+        },
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        5920,
+        1600
+      ],
+      "id": "1317a88d-d2d9-48e5-9fa7-50c8dcbc1323",
+      "name": "Stage 2 Anthropic Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "REWIRE_ANTHROPIC",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"summary\": \"Brief 2-3 sentence summary of the article.\"\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        5984,
+        1392
+      ],
+      "id": "96db9d17-c302-4105-b8c9-1a851d1a24c4",
+      "name": "Stage 2 Output Parser"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Merge Stage 2 agent output back with the original article fields.\n// Agent + Structured Output Parser discards input fields, so fetch the\n// originals from Stage 1 Flatten + Threshold by positional index.\nconst stage2_model = $('Init Run').first().json.stage2_model;\n\nconst responses = $input.all();\nconst originals = $('Stage 1 Flatten + Threshold').all();\n\nreturn responses.map((item, i) => {\n    const parsed = item.json?.output || {};\n    const summary = (parsed.summary || '').trim();\n    const orig = originals[i]?.json || {};\n    return {\n        json: {\n            ...orig,\n            summary,\n            stage2_model\n        }\n    };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        6368,
+        1168
+      ],
+      "id": "2c68e55e-f7c0-4a30-b3cb-cd903c28f58e",
+      "name": "Stage 2 Flatten"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Build a single _bulk body that:\n//   1. Upserts each article into briefing-articles\n//   2. Updates briefing-runs/_doc/{today} with completion telemetry\n// One HTTP call instead of two.\nconst articles = $('Format HTML').first().json.articles;\nconst fmt = $('Format HTML').first().json;\nconst init = $('Init Run').first().json;\nconst run_id = init.run_id;\nconst now = new Date().toISOString();\n\nconst lines = [];\n\n// Article upserts\nfor (const a of articles) {\n    lines.push(JSON.stringify({ index: { _index: 'briefing-articles', _id: a.url_hash } }));\n    lines.push(JSON.stringify({\n        url_hash: a.url_hash,\n        title: a.title,\n        content: a.content,\n        summary: a.summary,\n        category: 'AI',\n        relevance: a.relevance,\n        relevance_score: a.relevance_score,\n        source_name: a.source_name,\n        source_url: a.source_url,\n        source_type: a.source_type,\n        published_date: a.published_date,\n        ingested_at: now,\n        first_seen_run_id: run_id,\n        last_seen_run_id: run_id,\n        stage1_model: a.stage1_model,\n        stage2_model: a.stage2_model,\n        tags: a.tags || [],\n        popularity_score: a.popularity_score ?? null\n    }));\n}\n\n// Run-close update (briefing-runs/_doc/{today})\nlines.push(JSON.stringify({ update: { _index: 'briefing-runs', _id: run_id } }));\nlines.push(JSON.stringify({\n    doc: {\n        status: 'completed',\n        completed_at: now,\n        subject: fmt.subject,\n        html: fmt.html,\n        email_sent: true,\n        email_sent_at: now,\n        counts: {\n            summarized: fmt.article_count,\n            high:       fmt.counts.high,\n            medium:     fmt.counts.medium,\n            low:        fmt.counts.low\n        },\n        stage1_model: init.stage1_model,\n        stage2_model: init.stage2_model\n    },\n    doc_as_upsert: true\n}));\n\nreturn [{ json: { bulk_body: lines.join('\\n') + '\\n\\n' } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        7040,
+        1168
+      ],
+      "id": "e2aaa68c-c811-4d8b-879a-1cc2d64e1c94",
+      "name": "Build Persist + Close Body"
     },
     {
       "parameters": {
@@ -932,76 +890,140 @@
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            {
-              "name": "Content-Type",
-              "value": "application/x-ndjson"
-            }
+            {}
           ]
         },
         "sendBody": true,
-        "specifyBody": "string",
+        "contentType": "raw",
+        "rawContentType": "application/x-ndjson",
         "body": "={{ $json.bulk_body }}",
         "options": {
           "allowUnauthorizedCerts": true
         }
       },
       "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
+      "typeVersion": 4.2,
       "position": [
-        3740,
-        130
+        7264,
+        1168
       ],
-      "id": "6ced9a71-0e53-ef27-d10c-2f2c402f1925",
-      "name": "Persist Articles",
+      "id": "37561e4e-9954-47dd-ad11-ce46cee4fc7f",
+      "name": "Persist & Close",
       "credentials": {
         "httpBasicAuth": {
           "id": "REWIRE_OS",
-          "name": "OpenSearch admin"
+          "name": "Opensearch"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "// Build the run-completion update doc.\nconst init = $('Init Run').item.json;\nconst fmt = $('Format HTML').item.json;\nconst now = new Date().toISOString();\n\nreturn [{ json: { update_body: {\n    doc: {\n        status: 'completed',\n        completed_at: now,\n        subject: fmt.subject,\n        html: fmt.html,\n        email_sent: true,\n        email_sent_at: now,\n        counts: {\n            summarized: fmt.article_count,\n            high:       fmt.counts.high,\n            medium:     fmt.counts.medium,\n            low:        fmt.counts.low\n        },\n        stage1_model: init.stage1_model,\n        stage2_model: init.stage2_model\n    },\n    doc_as_upsert: true\n}}}];\n"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        3960,
-        130
-      ],
-      "id": "41d6125e-0dc8-4c03-aeb1-42affe285012",
-      "name": "Build Close Run Body"
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "={{ $env.OPENSEARCH_URL }}/briefing-runs/_update/{{ $('Init Run').item.json.run_id }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpBasicAuth",
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify($json.update_body) }}",
-        "options": {
-          "allowUnauthorizedCerts": true
-        }
+        "url": "https://www.reddit.com/r/Artificial/.rss",
+        "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        4180,
-        130
+        2336,
+        496
       ],
-      "id": "f7ac3145-d453-d29f-3164-da49d41be417",
-      "name": "Close Run Doc",
-      "credentials": {
-        "httpBasicAuth": {
-          "id": "REWIRE_OS",
-          "name": "OpenSearch admin"
-        }
-      }
+      "id": "1591eb56-4bc6-4fb3-b9c1-60baa026fc56",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "https://www.reddit.com/r/MachineLearning/.rss",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2336,
+        688
+      ],
+      "id": "5dd690b4-2851-4194-adf2-74d47e48ea9a",
+      "name": "Reddit r/MachineLearning"
+    },
+    {
+      "parameters": {
+        "url": "https://www.reddit.com/r/LocalLLaMA/.rss",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2336,
+        880
+      ],
+      "id": "36de8892-da24-4d15-aedf-afd39ca72c78",
+      "name": "Reddit r/LocalLLaMA"
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2784,
+        672
+      ],
+      "id": "64ca07c4-6484-4ceb-a611-40e4f91c4903",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "numberInputs": 7
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2784,
+        1568
+      ],
+      "id": "322332d6-9cce-41d7-9e78-d3d029d06c6e",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        3232,
+        1168
+      ],
+      "id": "8cd406ca-9400-4a92-8bc9-6737b8193fe9",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse Reddit Atom feed XML into per-entry items.\n// Handles N input items (one per Reddit feed after Tag \u2192 Merge).\n// Forwards source_name / source_type from the parent item so Normalize\n// downstream can attribute each entry correctly.\n\nconst items = $input.all();\nconst results = [];\n\nfunction decodeEntities(s) {\n    const named = str => str\n        .replace(/&lt;/g, '<')\n        .replace(/&gt;/g, '>')\n        .replace(/&quot;/g, '\"')\n        .replace(/&#39;/g, \"'\")\n        .replace(/&apos;/g, \"'\")\n        .replace(/&nbsp;/g, ' ')\n        .replace(/&amp;/g, '&');\n    let out = named(named(s));\n    out = out.replace(/&#(\\d+);/g, (_, n) => String.fromCharCode(+n));\n    out = out.replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)));\n    return out;\n}\n\nfunction stripBoilerplate(s) {\n    return s.replace(/\\s*submitted by\\s+\\/u\\/\\S+.*?(\\[comments\\]\\s*)?$/i, '').trim();\n}\n\nfor (let inputIdx = 0; inputIdx < items.length; inputIdx++) {\n    const item = items[inputIdx];\n    const xml = (item.json.data || '').toString();\n    const sourceName = item.json.source_name || 'Reddit';\n    const sourceType = item.json.source_type || 'reddit';\n    const entries = xml.split('<entry>').slice(1);\n\n    for (const entry of entries) {\n        const title = decodeEntities((entry.match(/<title[^>]*>([\\s\\S]*?)<\\/title>/)?.[1] || '').trim());\n        const link = entry.match(/<link[^>]*href=\"([^\"]+)\"/)?.[1] || '';\n        const published = entry.match(/<published>([^<]+)<\\/published>/)?.[1] || '';\n        const updated = entry.match(/<updated>([^<]+)<\\/updated>/)?.[1] || '';\n        const rawContent = (entry.match(/<content[^>]*>([\\s\\S]*?)<\\/content>/)?.[1] || '').trim();\n        const category = entry.match(/<category[^>]*term=\"([^\"]+)\"/)?.[1] || null;\n\n        const decoded = decodeEntities(rawContent);\n        const snippet = stripBoilerplate(\n            decoded.replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim()\n        );\n\n        results.push({\n            json: {\n                title,\n                link,\n                pubDate: published || updated,\n                content: snippet ? decoded : '',\n                contentSnippet: snippet,\n                categories: category ? [category] : [],\n                source_name: sourceName,\n                source_type: sourceType\n            },\n            pairedItem: { item: inputIdx }\n        });\n    }\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3008,
+        688
+      ],
+      "id": "c5d739b9-1975-4d17-97ce-1dc348966df5",
+      "name": "Format Reddit XML"
+    },
+    {
+      "parameters": {
+        "value": "=={{ ($json.source_url || '').trim().toLowerCase().replace(/\\/$/, '') }}",
+        "dataPropertyName": "=url_hash"
+      },
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 2,
+      "position": [
+        4128,
+        1168
+      ],
+      "id": "8ddac40b-2a61-4990-a750-feff88af5071",
+      "name": "Crypto"
     }
   ],
+  "pinData": {},
   "connections": {
     "Manual Trigger": {
       "main": [
@@ -1062,21 +1084,6 @@
       "main": [
         [
           {
-            "node": "Reddit r/Artificial",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Reddit r/MachineLearning",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Reddit r/LocalLLaMA",
-            "type": "main",
-            "index": 0
-          },
-          {
             "node": "Simon Willison",
             "type": "main",
             "index": 0
@@ -1110,37 +1117,19 @@
             "node": "Intelligence X",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "Reddit r/Artificial": {
-      "main": [
-        [
+          },
           {
-            "node": "Tag: Reddit r/Artificial",
+            "node": "HTTP Request",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "Reddit r/MachineLearning": {
-      "main": [
-        [
+          },
           {
-            "node": "Tag: Reddit r/MachineLearning",
+            "node": "Reddit r/MachineLearning",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "Reddit r/LocalLLaMA": {
-      "main": [
-        [
+          },
           {
-            "node": "Tag: Reddit r/LocalLLaMA",
+            "node": "Reddit r/LocalLLaMA",
             "type": "main",
             "index": 0
           }
@@ -1228,7 +1217,7 @@
       "main": [
         [
           {
-            "node": "Normalize",
+            "node": "Merge",
             "type": "main",
             "index": 0
           }
@@ -1239,9 +1228,9 @@
       "main": [
         [
           {
-            "node": "Normalize",
+            "node": "Merge",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
@@ -1250,9 +1239,9 @@
       "main": [
         [
           {
-            "node": "Normalize",
+            "node": "Merge",
             "type": "main",
-            "index": 0
+            "index": 2
           }
         ]
       ]
@@ -1261,7 +1250,7 @@
       "main": [
         [
           {
-            "node": "Normalize",
+            "node": "Merge1",
             "type": "main",
             "index": 0
           }
@@ -1272,9 +1261,9 @@
       "main": [
         [
           {
-            "node": "Normalize",
+            "node": "Merge1",
             "type": "main",
-            "index": 0
+            "index": 1
           }
         ]
       ]
@@ -1283,9 +1272,9 @@
       "main": [
         [
           {
-            "node": "Normalize",
+            "node": "Merge1",
             "type": "main",
-            "index": 0
+            "index": 2
           }
         ]
       ]
@@ -1294,9 +1283,9 @@
       "main": [
         [
           {
-            "node": "Normalize",
+            "node": "Merge1",
             "type": "main",
-            "index": 0
+            "index": 3
           }
         ]
       ]
@@ -1305,9 +1294,9 @@
       "main": [
         [
           {
-            "node": "Normalize",
+            "node": "Merge1",
             "type": "main",
-            "index": 0
+            "index": 4
           }
         ]
       ]
@@ -1316,9 +1305,9 @@
       "main": [
         [
           {
-            "node": "Normalize",
+            "node": "Merge1",
             "type": "main",
-            "index": 0
+            "index": 5
           }
         ]
       ]
@@ -1327,9 +1316,9 @@
       "main": [
         [
           {
-            "node": "Normalize",
+            "node": "Merge1",
             "type": "main",
-            "index": 0
+            "index": 6
           }
         ]
       ]
@@ -1360,18 +1349,7 @@
       "main": [
         [
           {
-            "node": "Compute Hashes",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Compute Hashes": {
-      "main": [
-        [
-          {
-            "node": "Build mget Body",
+            "node": "Crypto",
             "type": "main",
             "index": 0
           }
@@ -1404,73 +1382,7 @@
       "main": [
         [
           {
-            "node": "Build Stage 1 Batches",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Build Stage 1 Batches": {
-      "main": [
-        [
-          {
-            "node": "Stage 1 LLM (Groq)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Stage 1 LLM (Groq)": {
-      "main": [
-        [
-          {
-            "node": "Parse Stage 1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Parse Stage 1": {
-      "main": [
-        [
-          {
-            "node": "Build Stage 2 Batches",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Build Stage 2 Batches": {
-      "main": [
-        [
-          {
-            "node": "Stage 2 LLM (Anthropic)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Stage 2 LLM (Anthropic)": {
-      "main": [
-        [
-          {
-            "node": "Parse Stage 2",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Parse Stage 2": {
-      "main": [
-        [
-          {
-            "node": "Format HTML",
+            "node": "Stage 1 Build Batch",
             "type": "main",
             "index": 0
           }
@@ -1492,40 +1404,215 @@
       "main": [
         [
           {
-            "node": "Build Articles Bulk Body",
+            "node": "Build Persist + Close Body",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Build Articles Bulk Body": {
+    "Stage 1 Build Batch": {
       "main": [
         [
           {
-            "node": "Persist Articles",
+            "node": "Stage 1 Agent",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Persist Articles": {
+    "Stage 1 Agent": {
       "main": [
         [
           {
-            "node": "Build Close Run Body",
+            "node": "Stage 1 Flatten + Threshold",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Build Close Run Body": {
+    "Stage 1 Groq Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Stage 1 Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Stage 1 Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stage 1 Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Stage 1 Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stage 1 Flatten + Threshold": {
       "main": [
         [
           {
-            "node": "Close Run Doc",
+            "node": "Stage 2 Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stage 2 Agent": {
+      "main": [
+        [
+          {
+            "node": "Stage 2 Flatten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stage 2 Anthropic Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Stage 2 Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Stage 2 Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stage 2 Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Stage 2 Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stage 2 Flatten": {
+      "main": [
+        [
+          {
+            "node": "Format HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Persist + Close Body": {
+      "main": [
+        [
+          {
+            "node": "Persist & Close",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Tag: Reddit r/Artificial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reddit r/MachineLearning": {
+      "main": [
+        [
+          {
+            "node": "Tag: Reddit r/MachineLearning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reddit r/LocalLLaMA": {
+      "main": [
+        [
+          {
+            "node": "Tag: Reddit r/LocalLLaMA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Format Reddit XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Reddit XML": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crypto": {
+      "main": [
+        [
+          {
+            "node": "Build mget Body",
             "type": "main",
             "index": 0
           }
@@ -1533,9 +1620,12 @@
       ]
     }
   },
-  "active": false,
   "settings": {
-    "executionOrder": "v1"
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
   },
   "tags": [
     {
@@ -1550,5 +1640,6 @@
     {
       "name": "starter"
     }
-  ]
+  ],
+  "active": false
 }
