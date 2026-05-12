@@ -25,11 +25,11 @@ The Opensearch credential is reused by 4 nodes; the other three are 1-each.
 
 n8n UI → **Credentials** → **New** → pick the type → name it **exactly** as shown above → save. Repeat for all four.
 
-Once saved, the red badges on the workflow nodes turn green.
+Once saved, the red badges on the workflow nodes should turn green. If some stay red, **double-click each red-badged node to open it, then close it** — opening the node forces n8n to bind the credential. You don't need to change anything inside the node; just open and close.
 
-## 3. Activate the workflow
+## 3. Publish the workflow
 
-In the n8n UI: open the imported workflow → toggle **Active** (top-right).
+In the n8n UI: open the imported workflow → toggle **Publish** (top-right).
 
 The workflow has a scheduled trigger (06:00 Mon–Sat by default — adjust in the `Schedule Trigger` node if you want a different time). To run immediately without waiting for the schedule, click **Execute Workflow** in the editor.
 
