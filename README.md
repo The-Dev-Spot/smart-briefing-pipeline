@@ -33,7 +33,7 @@ docker compose ps   # opensearch status should read "healthy"
 .\scripts\apply-templates.ps1 ; .\scripts\seed-config.ps1
 ```
 
-Then **[docs/setup.md](docs/setup.md)** — import the workflow into n8n, create the 4 credentials, activate. The n8n side can't be scripted (credentials enter through the UI), so this part is manual but quick.
+Then **[docs/setup.md](docs/setup.md)** — import the workflow into n8n, create the 4 credentials, publish. The n8n side can't be scripted (credentials enter through the UI), so this part is manual but quick.
 
 ---
 
