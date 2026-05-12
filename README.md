@@ -6,6 +6,8 @@ A configurable RSS-to-LLM pipeline that delivers a curated daily briefing to you
 
 Built for [n8n](https://n8n.io) + [OpenSearch](https://opensearch.org). Hardened against indirect prompt injection from feed content. Backed by structured telemetry so you can actually see what your pipeline is doing.
 
+Runs on Linux, macOS, and Windows.
+
 ---
 
 ## Quickstart
@@ -14,25 +16,30 @@ Built for [n8n](https://n8n.io) + [OpenSearch](https://opensearch.org). Hardened
 git clone https://github.com/sashafelix/smart-briefing-pipeline.git
 cd smart-briefing-pipeline
 
+# 1. Configure
 cp .env.example .env
-# Edit .env — at minimum: OPENSEARCH_INITIAL_ADMIN_PASSWORD, N8N_ENCRYPTION_KEY,
-# BRIEFING_FROM_EMAIL, BRIEFING_TO_EMAIL.
+# Edit .env — fill in every value marked CHANGE_ME.
 
-docker compose -f compose/opensearch.yml up -d   # wait for healthy
-docker compose -f compose/n8n.yml up -d
+# 2. Bring up the full stack (opensearch + postgres + n8n)
+docker compose up -d
 
-bash scripts/apply-templates.sh                  # creates the 3 OpenSearch indices
+# 3. Wait for OpenSearch to be healthy (~60-90s on first run)
+docker compose ps   # opensearch status should read "healthy"
+
+# 4. Apply OpenSearch index templates + seed the sample config:
+#    Linux / macOS:
+./scripts/apply-templates.sh && ./scripts/seed-config.sh
+#    Windows PowerShell:
+.\scripts\apply-templates.ps1 ; .\scripts\seed-config.ps1
 ```
 
-Then **[docs/setup.md](docs/setup.md)** — import the workflow into n8n, create credentials, seed the default config, activate.
-
-You'll see your first briefing within a few minutes (or at the scheduled time).
+Then **[docs/setup.md](docs/setup.md)** — import the workflow into n8n, create credentials, activate. You'll see your first briefing within a few minutes (or at the scheduled time).
 
 ---
 
 ## Configuration
 
-The pipeline reads runtime config from a single OpenSearch document at `briefing-config/_doc/default` — models, thresholds, window, keywords. Edit and re-POST to change behaviour; no restart needed.
+The pipeline reads runtime config from a single OpenSearch document at `briefing-config/_doc/default` — models, thresholds, window, keywords. Edit and re-run `seed-config` to change behaviour; no restart needed.
 
 See [`config/examples/ai-security-news/`](config/examples/ai-security-news/) for a working configuration and customization guide.
 

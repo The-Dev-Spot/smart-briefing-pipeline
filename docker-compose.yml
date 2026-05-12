@@ -1,0 +1,117 @@
+# Smart Briefing — full stack: OpenSearch + Postgres + n8n.
+#
+# Bring everything up:
+#   docker compose up -d
+#
+# All three services share the `briefing` network and start in order
+# (postgres → opensearch → n8n) via healthchecks. Wait for OpenSearch to
+# report healthy (~60-90s on first run) before applying templates.
+#
+# Status check:
+#   docker compose ps
+#
+# Logs:
+#   docker compose logs -f opensearch
+#   docker compose logs -f n8n
+
+services:
+  opensearch:
+    image: opensearchproject/opensearch:3.6.0
+    container_name: opensearch
+    environment:
+      - cluster.name=smart-briefing
+      - node.name=opensearch
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD:?Set OPENSEARCH_INITIAL_ADMIN_PASSWORD in .env}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - briefing
+    healthcheck:
+      # $$ escapes to $ at runtime so the container shell does the expansion,
+      # not docker-compose at parse time.
+      test:
+        - "CMD-SHELL"
+        - 'curl -ks -u "admin:$$OPENSEARCH_INITIAL_ADMIN_PASSWORD" https://localhost:9200/_cluster/health | grep -E ''"status":"(green|yellow)"'' >/dev/null'
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: n8n-postgres
+    environment:
+      - POSTGRES_DB=n8n
+      - POSTGRES_USER=n8n
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - briefing
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U n8n -d n8n"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+  n8n:
+    image: n8nio/n8n:2.20.6
+    container_name: n8n
+    depends_on:
+      postgres:
+        condition: service_healthy
+      opensearch:
+        condition: service_healthy
+    environment:
+      # Storage backend — Postgres
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=n8n
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
+      # Credential encryption — REQUIRED before first start
+      - N8N_ENCRYPTION_KEY=${N8N_ENCRYPTION_KEY:?Set N8N_ENCRYPTION_KEY in .env (openssl rand -hex 32)}
+      # Timezone
+      - GENERIC_TIMEZONE=${TZ:-UTC}
+      - TZ=${TZ:-UTC}
+      # Workflow-side env vars — n8n expressions read these at runtime.
+      # OPENSEARCH_URL is hardcoded to the docker-network hostname here;
+      # the .env OPENSEARCH_URL is for host-side scripts only.
+      - OPENSEARCH_URL=https://opensearch:9200
+      - BRIEFING_FROM_EMAIL=${BRIEFING_FROM_EMAIL:?Set BRIEFING_FROM_EMAIL in .env}
+      - BRIEFING_TO_EMAIL=${BRIEFING_TO_EMAIL:?Set BRIEFING_TO_EMAIL in .env}
+      - BRIEFING_BCC_EMAIL=${BRIEFING_BCC_EMAIL:-}
+      # Allow n8n expressions to read process env
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
+    volumes:
+      - n8n_data:/home/node/.n8n
+    ports:
+      - "5678:5678"
+    networks:
+      - briefing
+    restart: unless-stopped
+
+volumes:
+  opensearch_data:
+  postgres_data:
+  n8n_data:
+
+networks:
+  briefing:
+    name: briefing
