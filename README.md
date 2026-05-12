@@ -64,6 +64,8 @@ flowchart LR
 
 Two-stage hybrid LLM pipeline backed by three strict-schema OpenSearch indices. Full write-up in [`docs/architecture.md`](docs/architecture.md).
 
+**Optional — OpenSearch Dashboards** for visual exploration of articles, runs, and config. Uncomment the `opensearch-dashboards` block in `docker-compose.yml` and run `docker compose up -d`. UI at [http://localhost:5601](http://localhost:5601).
+
 ---
 
 ## Threat model

@@ -50,6 +50,25 @@ services:
       start_period: 60s
     restart: unless-stopped
 
+  # OpenSearch Dashboards — optional. Uncomment this block to add a web UI
+  # for exploring briefing-articles, briefing-runs, and briefing-config.
+  # Available at http://localhost:5601 after start. Login: admin / your
+  # OPENSEARCH_INITIAL_ADMIN_PASSWORD from .env.
+  #
+  # opensearch-dashboards:
+  #   image: opensearchproject/opensearch-dashboards:3.6.0
+  #   container_name: opensearch-dashboards
+  #   depends_on:
+  #     opensearch:
+  #       condition: service_healthy
+  #   environment:
+  #     - 'OPENSEARCH_HOSTS=["https://opensearch:9200"]'
+  #   ports:
+  #     - "5601:5601"
+  #   networks:
+  #     - briefing
+  #   restart: unless-stopped
+
   postgres:
     image: postgres:16-alpine
     container_name: n8n-postgres

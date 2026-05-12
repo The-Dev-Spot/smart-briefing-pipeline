@@ -36,14 +36,16 @@ curl -ks -u "admin:$OPENSEARCH_INITIAL_ADMIN_PASSWORD" \
 
 **Windows PowerShell:**
 ```powershell
+# Load .env into the session
 Get-Content .env | ForEach-Object {
     if ($_ -match '^([A-Z_][A-Z0-9_]*)=(.*)$') {
         Set-Item -Path "env:$($matches[1])" -Value $matches[2]
     }
 }
-$auth = 'Basic ' + [Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes("admin:$env:OPENSEARCH_INITIAL_ADMIN_PASSWORD"))
-Invoke-RestMethod -Uri "$env:OPENSEARCH_URL/_cluster/health" `
-    -Headers @{'Authorization'=$auth} -SkipCertificateCheck | ConvertTo-Json
+
+# curl.exe ships with Windows 10/11 and supports the same flags as Linux curl
+curl.exe -ks -u "admin:$env:OPENSEARCH_INITIAL_ADMIN_PASSWORD" `
+    "$env:OPENSEARCH_URL/_cluster/health" | ConvertFrom-Json | ConvertTo-Json
 ```
 
 Expected: a JSON response with `"status": "green"` or `"status": "yellow"`, `"number_of_nodes": 1`. Any non-200 here, or no response at all, means OpenSearch isn't actually ready — don't proceed until this works.
@@ -135,9 +137,8 @@ curl -ks -u "admin:$OPENSEARCH_INITIAL_ADMIN_PASSWORD" \
 **Windows PowerShell:**
 ```powershell
 $today = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd')
-$auth = 'Basic ' + [Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes("admin:$env:OPENSEARCH_INITIAL_ADMIN_PASSWORD"))
-Invoke-RestMethod -Uri "$env:OPENSEARCH_URL/briefing-runs/_doc/$today" `
-    -Headers @{'Authorization'=$auth} -SkipCertificateCheck | ConvertTo-Json -Depth 10
+curl.exe -ks -u "admin:$env:OPENSEARCH_INITIAL_ADMIN_PASSWORD" `
+    "$env:OPENSEARCH_URL/briefing-runs/_doc/$today" | ConvertFrom-Json | ConvertTo-Json -Depth 10
 ```
 
 Acceptance criteria on the returned document:
