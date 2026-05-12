@@ -10,6 +10,15 @@ Runs on Linux, macOS, and Windows.
 
 ---
 
+## Prerequisites
+
+- **Docker** with Compose v2 — Docker Desktop on Mac/Windows, or Docker Engine on Linux. ~4 GB free RAM, ~2 GB free disk
+- **A Groq API key** — free tier works fine, [console.groq.com](https://console.groq.com)
+- **An Anthropic API key** — [console.anthropic.com](https://console.anthropic.com)
+- **An SMTP provider** — anything that can send mail. SendGrid, Postmark, Resend, Mailgun, or your own server
+
+---
+
 ## Quickstart
 
 ```bash
