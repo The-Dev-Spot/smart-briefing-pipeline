@@ -73,7 +73,8 @@ This split is documented as ADR-0018 in the author's homelab; a deeper write-up 
 
 Two properties worth calling out:
 
-**Same-day re-trigger is safe.** The `briefing-runs._id` is the date string, so re-triggering today's workflow updates the same run doc rather than creating a new one. The wrapper "Mailer" step (separate workflow) checks `email_sent: true` before sending — same-day re-runs don't generate duplicate emails. The `briefing-articles` index uses URL-hash IDs, so re-runs don't create duplicate article docs either.
+**Same-day re-trigger is safe.** Same-day re-trigger is partially idempotent. The briefing-runs._id is the date string, so re-triggering today's workflow updates the same run doc rather than creating a new one. The briefing-articles index uses URL-hash IDs, so re-runs don't create duplicate article docs.
+However, in v1.0 the email-send is not guarded by an email_sent: true check — re-triggering today's workflow currently produces a second email. The "Mailer split" — separating the briefing pipeline from delivery so re-runs are fully idempotent — is on the v1.1 roadmap.
 
 **Failure modes are surfaced, not swallowed.** Stage 1 and Stage 2 emit per-batch errors (LLM provider errors, JSON parse failures, score-to-article mismatch) into the run doc's `errors[]` array. A run with errors still completes and delivers what it has — the errors are visible after the fact rather than crashing the pipeline.
 
