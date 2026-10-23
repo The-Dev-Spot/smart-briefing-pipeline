@@ -22,7 +22,7 @@ Runs on Linux, macOS, and Windows.
 ## Quickstart
 
 ```bash
-git clone https://github.com/sashafelix/smart-briefing-pipeline.git
+git clone https://github.com/The-Dev-Spot/smart-briefing-pipeline.git
 cd smart-briefing-pipeline
 
 # 1. Configure
